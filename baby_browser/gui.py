@@ -50,7 +50,8 @@ class Browser_Main_Widget(QMainWindow):
 
 
         #Add html widget
-        self.setCentralWidget(Browser_Widget())
+        self.htmlWidget = Browser_Widget()
+        self.setCentralWidget(self.htmlWidget)
 
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle('Menubar')
@@ -60,18 +61,30 @@ class Browser_GUI:
         self.app = QApplication(sys.argv)
         #self.widget = Browser_Widget()
         #self.widget.center()
+        self.inside_body = False
         self.dom = dom
         self.widget = Browser_Main_Widget()
         self.render_dom()
         sys.exit(self.app.exec_())
     def render_dom(self):
        print(self.dom)
+       self.inside_body = False
        self.traverse_dom(self.dom.root)
     def traverse_dom(self, root):
         for child in root.children:
             self.traverse_dom(child)
         if root.tag.lower()=="title":
-            print(root.tag)
+            self.widget.setWindowTitle(root.content)
+        if root.tag.lower()=="body": 
+            self.inside_body = True
+        if root.content and self.inside_body:
+            text = QLabel()
+            text.setText(root.content)
+            htmlWidget = self.widget.htmlWidget.layout
+            htmlWidget.addWidget(text)
+            htmlWidget.addStretch()
+            
+
         
 def create_dom():
     html = Tag("html", None)
