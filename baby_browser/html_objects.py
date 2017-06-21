@@ -39,6 +39,7 @@ class DOM:
             lst_root += "\n"+("  "*(level+1))+str(root.content)
         for child in root.children:
             lst_root+= "\n"+self.str_traverse(child, level+1)
+        #lst_root+= "\n"+"  "*level+str(root)
         return lst_root
     def __repr__(self):
         return self.__str__()
