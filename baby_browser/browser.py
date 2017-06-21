@@ -5,9 +5,9 @@ class BabyBrowser:
     def __init__(self):
         self.html_tokenizer = Html_Tokenizer()
         self.gui = None
-        self.networking = None
-    def network(self):
-        return "<html>\n<head><title>Website Title</title></head>\n<body>\nHi\n</body>\n</html>"
+        self.networking = Network()
+    def network_get(self, url):
+        return self.networking.get(url) 
     def tokenize_html(self, html):
         self.html_tokenizer.tokenize(html)
         return self.html_tokenizer.dom
@@ -15,6 +15,8 @@ class BabyBrowser:
         self.gui = Browser_GUI(dom) 
 if __name__=="__main__":
     browser = BabyBrowser()
-    html = browser.network()
+    url = "https://lauryndbrown.github.io/BabyBrowser/baby_browser/Examples/helloWorld2.html"
+    html = browser.network_get(url)
+    #html  = "<html>\n<head><title>Website Title</title></head>\n<body>\nHi\n</body>\n</html>"
     dom = browser.tokenize_html(html)
     browser.show_gui(dom)

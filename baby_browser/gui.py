@@ -53,7 +53,7 @@ class Browser_Main_Widget(QMainWindow):
         self.setCentralWidget(self.htmlWidget)
 
         self.setGeometry(100, 100, 1200, 1200)
-        self.setWindowTitle('Menubar')
+        self.setWindowTitle('Untitiled')
         self.show()
 class Browser_GUI:
     def __init__(self, dom):
