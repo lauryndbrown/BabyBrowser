@@ -29,10 +29,14 @@ class DOM:
             self.current_level = self.root
     def close_child(self):
         self.current_level = self.current_level.parent
+    def add_content(self, content):
+        self.current_level.content = content 
     def __str__(self):
         return self.str_traverse(self.root, 0)
     def str_traverse(self, root, level):
         lst_root = "  "*level+str(root)
+        if root.content:
+            lst_root += "\n"+("  "*(level+1))+str(root.content)
         for child in root.children:
             lst_root+= "\n"+self.str_traverse(child, level+1)
         return lst_root

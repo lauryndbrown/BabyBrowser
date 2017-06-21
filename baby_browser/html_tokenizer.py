@@ -13,6 +13,7 @@ class Html_Tokenizer:
         print("Found end tag:", tag)
         self.dom.close_child() 
     def handle_data(self, data):
+        self.dom.add_content(data)
         print("Found data:", data)
     def p_opentag(self, match):
         tag = match.group(1)
@@ -48,7 +49,7 @@ class Html_Tokenizer:
             add_to_index = 1
         return add_to_index+index
 if __name__=="__main__":
-    html_str = "<html>\n<body>\nHi\n</body>\n</html>"
+    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\nHi\n</body>\n</html>"
     tokenizer = Html_Tokenizer()
     tokenizer.tokenize(html_str) 
     print(tokenizer.dom)
