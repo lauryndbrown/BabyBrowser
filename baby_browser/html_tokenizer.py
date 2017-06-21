@@ -1,4 +1,5 @@
 import re
+from baby_browser.html_objects import * 
 #Tokens
 t_OPENTAG = re.compile("<(\w+)>")
 t_CLOSETAG = re.compile("</(\w+)>")
@@ -7,19 +8,21 @@ t_WHITESPACE = re.compile("\s+")
 class Html_Tokenizer:
     def handle_opentag(self, tag, attrs):
         print("Found start tag:", tag)
+        self.dom.add_child(Tag(tag, attrs)) 
     def handle_closetag(self, tag):
         print("Found end tag:", tag)
+        self.dom.close_child() 
     def handle_data(self, data):
         print("Found data:", data)
-
     def p_opentag(self, match):
-        tag = match.group(0)
+        tag = match.group(1)
         return tag, None, len(tag)
     def p_closetag(self, match):
-        tag = match.group(0)
+        tag = match.group(1)
         return tag, None, len(tag)
     def tokenize(self, html):
         index = 0
+        self.dom = DOM()
         while index<len(html):
             index = self.parse(html, index)
     def parse(self, html, index):
@@ -31,11 +34,11 @@ class Html_Tokenizer:
         if opentag:
             tag, attrs, tag_len = self.p_opentag(opentag)
             self.handle_opentag(tag, attrs)
-            add_to_index = tag_len+1
+            add_to_index = tag_len+2
         elif closetag:
             tag, attrs, tag_len = self.p_closetag(closetag)
             self.handle_closetag(tag)
-            add_to_index = tag_len+1
+            add_to_index = tag_len+2
         elif whitespace:
             add_to_index = len(whitespace.group(0))
         elif data:
@@ -48,3 +51,4 @@ if __name__=="__main__":
     html_str = "<html>\n<body>\nHi\n</body>\n</html>"
     tokenizer = Html_Tokenizer()
     tokenizer.tokenize(html_str) 
+    print(tokenizer.dom)
