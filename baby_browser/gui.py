@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from baby_browser.html_objects import *
 #Address bar for inserting a URI
 #Back and forward buttons
 #Bookmarking options
@@ -86,23 +85,24 @@ class Browser_GUI:
             
 
         
-def create_dom():
-    html = Tag("html", None)
-    head = Tag("head", None)
-    title = Tag("title", None)
-    title.content = "My Title!"
-    body = Tag("body", None)
-    body.content = "Hello World"
-    dom = DOM()
-    dom.add_child(html)
-    dom.add_child(head)
-    dom.add_child(title)
-    dom.close_child()#title
-    dom.close_child()#head
-    dom.add_child(body)
-    dom.close_child()#body
-    dom.close_child()#html
-    return dom
 if __name__=="__main__":
+    from baby_browser.html_objects import *
+    def create_dom():
+        html = Tag("html", None)
+        head = Tag("head", None)
+        title = Tag("title", None)
+        title.content = "My Title!"
+        body = Tag("body", None)
+        body.content = "Hello World"
+        dom = DOM()
+        dom.add_child(html)
+        dom.add_child(head)
+        dom.add_child(title)
+        dom.close_child()#title
+        dom.close_child()#head
+        dom.add_child(body)
+        dom.close_child()#body
+        dom.close_child()#html
+        return dom
     dom = create_dom()
     gui = Browser_GUI(dom)
