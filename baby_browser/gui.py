@@ -96,14 +96,14 @@ class Browser_Main_Widget(QMainWindow):
         self.addTab("New Tab", Browser_Widget())
     def addTab(self, tabName, widget):
         self.tabBar.addTab(widget, tabName)
+        self.tabBar.setCurrentWidget(widget)
+
     def fetch_url(self):
         url = self.urlBar.text()
         if self.browser:
             dom = self.browser.fetch_url(url)
             index = self.tabBar.currentIndex()
             tab = self.tabBar.currentWidget()
-            #self.deleteWidgets(tab)
-            #del tab
             widget = Browser_Widget()
             Browser_GUI.render_dom(dom, widget)
             self.addTab("New Tab", widget)
@@ -111,12 +111,6 @@ class Browser_Main_Widget(QMainWindow):
             self.removeTab(index)
             print(dom)
         print(url)
-    def deleteWidgets(self, widget):
-        while widget.count():
-            item = layout.takeAt(0)
-            w = item.widget()
-            w.deleteLater()
-
 class Browser_GUI:
     def __init__(self, dom, browser=None):
         self.app = QApplication(sys.argv)
