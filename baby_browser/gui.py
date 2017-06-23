@@ -21,6 +21,7 @@ class Browser_Widget(QWidget):
         palette.setColor(self.backgroundRole(), Qt.white)
         self.setPalette(palette)
 
+        self.title = None
         #self.layout = QVBoxLayout(self)
         #self.setLayout(self.layout)
 
@@ -51,7 +52,7 @@ class Browser_Main_Widget(QMainWindow):
         self.setCentralWidget(self.tabBar)
 
         self.new_tab_button = QPushButton()
-        tab_icon_path =  os.path.join("baby_browser", "images", "tab.png")
+        tab_icon_path =  os.path.join("baby_browser", "images", "new folder black.png")
         self.new_tab_button.setIcon(QIcon(tab_icon_path))
         button_font = self.new_tab_button.font()
         button_font.setBold(True)
@@ -94,6 +95,8 @@ class Browser_Main_Widget(QMainWindow):
         else:
             self.new_tab_button.move(size, height)
     def removeTab(self, index):
+        if self.tabBar.count()==1:
+            self.addDefaultTab()
         widget = self.tabBar.widget(index)
         widget.deleteLater()
         self.tabBar.removeTab(index)
@@ -128,7 +131,10 @@ class Browser_GUI:
         self.widget = Browser_Main_Widget()
         htmlWidget = Browser_Widget()
         self.render_dom(self.dom, htmlWidget)
-        self.widget.addTab(htmlWidget.title, htmlWidget)
+        if htmlWidget.title:
+            self.widget.addTab(htmlWidget.title, htmlWidget)
+        else:
+            self.widget.addTab("         ", htmlWidget)
         self.widget.show()
         sys.exit(self.app.exec_())
     def render_dom(self, dom, htmlWidget):
