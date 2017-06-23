@@ -3,7 +3,7 @@ import os
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-
+from baby_browser.html_tokenizer import *
 #Address bar for inserting a URI
 #Back and forward buttons
 #Bookmarking options
@@ -86,8 +86,8 @@ class Browser_Main_Widget(QMainWindow):
         #self.setCentralWidget(self.htmlWidget)
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle('BabyBrowser')
-    def removeTab(self, index):
-        if self.tabBar.count()==1:
+    def removeTab(self, index, no_add=False):
+        if self.tabBar.count()==1 and not no_add:
             self.addDefaultTab()
         widget = self.tabBar.widget(index)
         widget.deleteLater()
@@ -97,20 +97,20 @@ class Browser_Main_Widget(QMainWindow):
     def addTab(self, tabName, widget):
         self.tabBar.addTab(widget, tabName)
         self.tabBar.setCurrentWidget(widget)
-
     def fetch_url(self):
         url = self.urlBar.text()
+        print(url)
         if self.browser:
             dom = self.browser.fetch_url(url)
             index = self.tabBar.currentIndex()
-            tab = self.tabBar.currentWidget()
+            self.removeTab(index, True)
+
             widget = Browser_Widget()
             Browser_GUI.render_dom(dom, widget)
-            self.addTab("New Tab", widget)
-            self.tabBar.setCurrentWidget(widget)
-            self.removeTab(index)
+            self.addTab(widget.title, widget)
+            print("DONE------------------------")
+            print("has title:", widget.title)
             print(dom)
-        print(url)
 class Browser_GUI:
     def __init__(self, dom, browser=None):
         self.app = QApplication(sys.argv)
@@ -142,19 +142,30 @@ class Browser_GUI:
         self.widget.show()
         sys.exit(self.app.exec_())
     def render_dom(dom, htmlWidget):
-        inside_body = False
-        Browser_GUI.traverse_dom(dom.root, htmlWidget, inside_body)
-    def traverse_dom(root, htmlWidget, inside_body):
+        layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignTop)
+        htmlWidget.setLayout(layout)
+        Browser_GUI.traverse_dom(dom.root, htmlWidget, layout)
+    def traverse_dom(root, htmlWidget, layout):
         for child in root.children:
-            Browser_GUI.traverse_dom(child, htmlWidget, inside_body)
+            Browser_GUI.traverse_dom(child, htmlWidget, layout)
         if root.tag.lower()=="title":
-            htmlWidget.setWindowTitle(root.content)
-            htmlWidget.title = root.content
-        if root.tag.lower()=="body": 
-            inside_body = True
-        if root.content and inside_body:
-            text = QLabel(root.content, htmlWidget)
-
+            title = root.content.rstrip()
+            htmlWidget.setWindowTitle(title)
+            htmlWidget.title = title
+        if root.parse_state==IN_BODY:
+            tag = root.tag.lower()
+            content = root.content
+            if tag=="h1":
+                text = QLabel(content)
+                font = QFont("Raleway")
+                font.setPointSize(36)
+                font.setBold(True)
+                text.setFont(font)
+                layout.addWidget(text)
+            elif content:
+                text = QLabel(root.content)
+                layout.addWidget(text)
             
 
         
