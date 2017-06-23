@@ -39,9 +39,21 @@ class Browser_Main_Widget(QMainWindow):
         #exitAction.setShortcut('Ctrl+Q')
         #exitAction.setStatusTip('Exit Application')
         #exitAction.triggered.connect(qApp.quit)
+        icon_path =  os.path.join("baby_browser", "images", "favicon-tint.ico")
+        self.setWindowIcon(QIcon(icon_path))
 
+        #Tabs
+        self.tabs = QTabWidget(self)
+        tab1 = QWidget()
+        tab2 = QWidget()
+        tab3 = QWidget()
+        
+        self.tabs.addTab(tab1, "Tab 1")
+        self.tabs.addTab(tab2, "Tab 2")
+        self.tabs.addTab(tab3, "Tab 3")
 
-        self.statusBar()
+        self.setCentralWidget(self.tabs)
+
         #menubar = self.menuBar()
         #fileMenu = menubar.addMenu('File')
         #fileMenu.addAction(exitAction)
@@ -49,8 +61,11 @@ class Browser_Main_Widget(QMainWindow):
 
         #Add html widget
         self.htmlWidget = Browser_Widget()
-        self.setCentralWidget(self.htmlWidget)
-
+        layout = QVBoxLayout() 
+        layout.addWidget(self.htmlWidget)
+        tab1.setLayout(layout)
+        #self.setCentralWidget(self.htmlWidget)
+        
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle('Untitiled')
         self.show()
@@ -67,7 +82,7 @@ class Browser_GUI:
         font_db.addApplicationFont(font_path_regular)
         font_db.addApplicationFont(font_path_bold)
         font_db.addApplicationFont(font_path_italic)
-        ttf_font = QFont("Raleway", weight=QFont.Normal)
+        ttf_font = QFont("Raleway")
         #ttf_font.setItalic(True)
         #ttf_font.setBold(True)
         self.app.setFont(ttf_font)
