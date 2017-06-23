@@ -37,10 +37,6 @@ class Browser_Main_Widget(QMainWindow):
         self.initUI()
         self.browser = browser
     def initUI(self):
-        #exitAction = QAction('Exit', '&Exit', self)
-        #exitAction.setShortcut('Ctrl+Q')
-        #exitAction.setStatusTip('Exit Application')
-        #exitAction.triggered.connect(qApp.quit)
         icon_path =  os.path.join("baby_browser", "images", "favicon-tint.ico")
         self.setWindowIcon(QIcon(icon_path))
 
@@ -76,22 +72,29 @@ class Browser_Main_Widget(QMainWindow):
         back_button = QPushButton()
         back_button.setIcon(QIcon(os.path.join("baby_browser", "images", "back.png")))
         back_button.setToolTip('Back')
+        back_button.clicked.connect(self.go_back)
         forward_button = QPushButton()
         forward_button.setIcon(QIcon(os.path.join("baby_browser", "images", "forward.png")))
         forward_button.setToolTip('Forward')
+        forward_button.clicked.connect(self.go_forward)
         #Favorites Button
-        favorite_button = QPushButton()
-        favorite_button.setIcon(QIcon(os.path.join("baby_browser", "images", "fav-border.png")))
-        favorite_button.setToolTip('Bookmark')
+        self.favorite_button = QPushButton()
+        self.fav_border_icon = QIcon(os.path.join("baby_browser", "images", "fav-border.png"))
+        self.fav_full_icon = QIcon(os.path.join("baby_browser", "images", "fav-full.png"))
+        
+        self.favorite_button.setIcon(self.fav_border_icon)
+        self.favorite_button.setToolTip('Bookmark')
+        self.favorite_button.clicked.connect(self.toggle_bookmark)
         
         toolbar.addWidget(back_button)
         toolbar.addWidget(forward_button)
         toolbar.addSeparator()
-        toolbar.addWidget(favorite_button)
+        toolbar.addWidget(self.favorite_button)
         toolbar.addWidget(self.urlBar)
         toolbar.addSeparator()
         toolbar.addWidget(submit_button)
 
+        self.addDefaultTab()
         #Add html widget
         #layout = QVBoxLayout() 
         #layout.addWidget(self.htmlWidget)
@@ -110,10 +113,16 @@ class Browser_Main_Widget(QMainWindow):
     def addTab(self, tabName, widget):
         self.tabBar.addTab(widget, tabName)
         self.tabBar.setCurrentWidget(widget)
-    def fetch_url(self):
-        url = self.urlBar.text()
+    def fetch_url(self, url=None):
+        if not url:
+            url = self.urlBar.text()
         print(url)
         if self.browser:
+            if url in self.browser.bookmarks:
+                self.favorite_button.setIcon(self.fav_fill_icon)
+            else:
+                self.favorite_button.setIcon(self.fav_border_icon)
+
             dom = self.browser.fetch_url(url)
             index = self.tabBar.currentIndex()
             self.removeTab(index, True)
@@ -124,8 +133,28 @@ class Browser_Main_Widget(QMainWindow):
             print("DONE------------------------")
             print("has title:", widget.title)
             print(dom)
+    def go_back(self):
+        if self.browser:
+            url = self.browser.go_back()
+            self.fetch_url(url)
+    def go_forward(self):
+        if self.browser:
+            url = self.browser.go_forward()
+            self.fetch_url(url)
+    def toggle_bookmark(self):
+        if self.browser.current_url in self.browser.bookmarks:
+            self.add_bookmark()
+        else:
+            self.remove_bookmark()
+    def add_bookmark(self):
+        self.browser.add_bookmark(self.browser.current_url)
+        self.favorite_button.setIcon(self.fav_fill_icon)
+    def remove_bookmark(self):
+        self.browser.remove_bookmark(self.browser.current_url)
+        self.favorite_button.setIcon(self.fav_border_icon)
+            
 class Browser_GUI:
-    def __init__(self, dom, browser=None):
+    def __init__(self, browser=None):
         self.app = QApplication(sys.argv)
         self.browser = browser
         # Load the default fonts 
@@ -144,14 +173,7 @@ class Browser_GUI:
         #self.widget = Browser_Widget()
         #self.widget.center()
         self.inside_body = False
-        self.dom = dom
         self.widget = Browser_Main_Widget(browser)
-        htmlWidget = Browser_Widget()
-        Browser_GUI.render_dom(self.dom, htmlWidget)
-        if htmlWidget.title:
-            self.widget.addTab(htmlWidget.title, htmlWidget)
-        else:
-            self.widget.addTab("         ", htmlWidget)
         self.widget.show()
         sys.exit(self.app.exec_())
     def render_dom(dom, htmlWidget):
@@ -181,23 +203,4 @@ class Browser_GUI:
                 layout.addWidget(text)
         
 if __name__=="__main__":
-    from baby_browser.html_objects import *
-    def create_dom():
-        html = Tag("html", None)
-        head = Tag("head", None)
-        title = Tag("title", None)
-        title.content = "My Title!"
-        body = Tag("body", None)
-        body.content = "Hello World"
-        dom = DOM()
-        dom.add_child(html)
-        dom.add_child(head)
-        dom.add_child(title)
-        dom.close_child()#title
-        dom.close_child()#head
-        dom.add_child(body)
-        dom.close_child()#body
-        dom.close_child()#html
-        return dom
-    dom = create_dom()
-    gui = Browser_GUI(dom)
+    gui = Browser_GUI()
