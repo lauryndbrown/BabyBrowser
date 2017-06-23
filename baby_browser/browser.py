@@ -23,7 +23,7 @@ class BabyBrowser:
     def tokenize_html(self, html):
         self.html_tokenizer.tokenize(html)
         return self.html_tokenizer.dom
-    def show_gui(self, dom):
+    def show_gui(self):
         self.gui = Browser_GUI(self) 
     def go_back(self):
         page_url = self.previous_pages.pop()
@@ -43,8 +43,8 @@ class BabyBrowser:
 
 if __name__=="__main__":
     browser = BabyBrowser()
-    url = "https://lauryndbrown.github.io/BabyBrowser/baby_browser/Examples/helloWorld2.html"
-    html = browser.network_get(url)
+    #url = "https://lauryndbrown.github.io/BabyBrowser/baby_browser/Examples/helloWorld2.html"
+    #html = browser.network_get(url)
     #html  = "<html>\n<head><title>Website Title</title></head>\n<body>\nHi\n</body>\n</html>"
-    dom = browser.tokenize_html(html)
-    browser.show_gui(dom)
+    #dom = browser.tokenize_html(html)
+    browser.show_gui()
