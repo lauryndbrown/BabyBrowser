@@ -52,15 +52,15 @@ class Browser_Main_Widget(QMainWindow):
         self.tabBar.setMovable(True)
         self.setCentralWidget(self.tabBar)
 
-        self.new_tab_button = QPushButton()
+        new_tab_button = QPushButton()
         tab_icon_path =  os.path.join("baby_browser", "images", "new folder black.png")
-        self.new_tab_button.setIcon(QIcon(tab_icon_path))
-        button_font = self.new_tab_button.font()
+        new_tab_button.setToolTip('New Tab')
+        new_tab_button.setIcon(QIcon(tab_icon_path))
+        button_font = new_tab_button.font()
         button_font.setBold(True)
-       # self.new_tab_button.setFixedSize(50,40)
-        self.new_tab_button.setIconSize(QSize(50, 50))
-        self.tabBar.setCornerWidget(self.new_tab_button)
-        self.new_tab_button.clicked.connect(self.addDefaultTab)
+        new_tab_button.setIconSize(QSize(50, 50))
+        self.tabBar.setCornerWidget(new_tab_button)
+        new_tab_button.clicked.connect(self.addDefaultTab)
 
 
         #toolbar
@@ -68,16 +68,29 @@ class Browser_Main_Widget(QMainWindow):
         toolbar.setMovable(False)
         #Url Bar
         self.urlBar = QLineEdit()
-        url_submit = QPushButton("Submit")
-        url_submit.clicked.connect(self.fetch_url)
+        submit_button = QPushButton()
+        submit_button.setIcon(QIcon(os.path.join("baby_browser", "images", "search.png")))
+        submit_button.clicked.connect(self.fetch_url)
+        submit_button.setToolTip('Sumbit Url')
+        #Back/Forward Buttons
+        back_button = QPushButton()
+        back_button.setIcon(QIcon(os.path.join("baby_browser", "images", "back.png")))
+        back_button.setToolTip('Back')
+        forward_button = QPushButton()
+        forward_button.setIcon(QIcon(os.path.join("baby_browser", "images", "forward.png")))
+        forward_button.setToolTip('Forward')
+        #Favorites Button
+        favorite_button = QPushButton()
+        favorite_button.setIcon(QIcon(os.path.join("baby_browser", "images", "fav-border.png")))
+        favorite_button.setToolTip('Bookmark')
+        
+        toolbar.addWidget(back_button)
+        toolbar.addWidget(forward_button)
+        toolbar.addSeparator()
+        toolbar.addWidget(favorite_button)
         toolbar.addWidget(self.urlBar)
         toolbar.addSeparator()
-        toolbar.addWidget(url_submit)
-        #toolbar.addWidget(urlBar)
-        #menubar = self.menuBar()
-        #fileMenu = menubar.addMenu('File')
-        #fileMenu.addAction(exitAction)
-
+        toolbar.addWidget(submit_button)
 
         #Add html widget
         #layout = QVBoxLayout() 
@@ -166,8 +179,6 @@ class Browser_GUI:
             elif content:
                 text = QLabel(root.content)
                 layout.addWidget(text)
-            
-
         
 if __name__=="__main__":
     from baby_browser.html_objects import *
