@@ -51,13 +51,12 @@ class Browser_Main_Widget(QMainWindow):
         self.setCentralWidget(self.tabBar)
 
         self.new_tab_button = QPushButton()
-        tab_icon_path =  os.path.join("baby_browser", "images", "favicon-plus-square.ico")
+        tab_icon_path =  os.path.join("baby_browser", "images", "tab.png")
         self.new_tab_button.setIcon(QIcon(tab_icon_path))
         button_font = self.new_tab_button.font()
         button_font.setBold(True)
-        self.new_tab_button.setFixedSize(50,40)
-        self.new_tab_button.setIconSize(QSize(30, 30))
-        button_font.setPointSize(30)
+       # self.new_tab_button.setFixedSize(50,40)
+        self.new_tab_button.setIconSize(QSize(50, 50))
         self.tabBar.setCornerWidget(self.new_tab_button)
         self.new_tab_button.clicked.connect(self.addDefaultTab)
 
@@ -66,8 +65,12 @@ class Browser_Main_Widget(QMainWindow):
         toolbar = self.addToolBar("Tool Bar")
         toolbar.setMovable(False)
         #Url Bar
-        urlBar = QLineEdit()
-        toolbar.addWidget(urlBar)
+        self.urlBar = QLineEdit()
+        url_submit = QPushButton("Submit")
+        url_submit.clicked.connect(self.fetch_url)
+        toolbar.addWidget(self.urlBar)
+        toolbar.addSeparator()
+        toolbar.addWidget(url_submit)
         #toolbar.addWidget(urlBar)
         #menubar = self.menuBar()
         #fileMenu = menubar.addMenu('File')
@@ -98,7 +101,8 @@ class Browser_Main_Widget(QMainWindow):
         self.addTab("New Tab", Browser_Widget())
     def addTab(self, tabName, widget):
         self.tabBar.addTab(widget, tabName)
-
+    def fetch_url(self):
+        print(self.urlBar.text())
 
 class Browser_GUI:
     def __init__(self, dom):
