@@ -45,6 +45,9 @@ class Browser_Main_Widget(QMainWindow):
 
         #Tabs
         self.tabBar = QTabWidget()
+        self.tabBar.tabCloseRequested.connect(self.removeTab)
+        self.tabBar.setTabsClosable(True)
+        self.tabBar.setMovable(True)
         self.setCentralWidget(self.tabBar)
 
         #toolbar
@@ -64,6 +67,10 @@ class Browser_Main_Widget(QMainWindow):
         #self.setCentralWidget(self.htmlWidget)
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle('BabyBrowser')
+    def removeTab(self, index):
+        widget = self.tabBar.widget(index)
+        widget.deleteLater()
+        self.tabBar.removeTab(index)
     def addDefaultTab(self):
         self.addTab("New Tab", Browser_Widget())
     def addTab(self, tabName, widget):
