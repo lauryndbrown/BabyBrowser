@@ -50,11 +50,25 @@ class Browser_Main_Widget(QMainWindow):
         self.tabBar.setMovable(True)
         self.setCentralWidget(self.tabBar)
 
+        self.new_tab_button = QPushButton()
+        tab_icon_path =  os.path.join("baby_browser", "images", "favicon-plus-square.ico")
+        self.new_tab_button.setIcon(QIcon(tab_icon_path))
+        button_font = self.new_tab_button.font()
+        button_font.setBold(True)
+        self.new_tab_button.setFixedSize(50,40)
+        self.new_tab_button.setIconSize(QSize(30, 30))
+        button_font.setPointSize(30)
+        self.tabBar.setCornerWidget(self.new_tab_button)
+        self.new_tab_button.clicked.connect(self.addDefaultTab)
+
+
         #toolbar
-        toolbar = self.addToolBar("New Tab")
-        new_tab = QAction("New Tab", self)
-        toolbar.addAction(new_tab)
-        toolbar.actionTriggered[QAction].connect(self.addDefaultTab)
+        toolbar = self.addToolBar("Tool Bar")
+        toolbar.setMovable(False)
+        #Url Bar
+        urlBar = QLineEdit()
+        toolbar.addWidget(urlBar)
+        #toolbar.addWidget(urlBar)
         #menubar = self.menuBar()
         #fileMenu = menubar.addMenu('File')
         #fileMenu.addAction(exitAction)
@@ -67,6 +81,15 @@ class Browser_Main_Widget(QMainWindow):
         #self.setCentralWidget(self.htmlWidget)
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle('BabyBrowser')
+    def move_new_tab_button(self):
+        size = sum([self.tabBar.tabRect(i).width() for i in range(self.tabBar.count())])
+        height = self.tabBar.geometry().top()
+        width = self.width()
+        print("Size:", size)
+        if size > width:
+            self.new_tab_button.move(width-54, height)
+        else:
+            self.new_tab_button.move(size, height)
     def removeTab(self, index):
         widget = self.tabBar.widget(index)
         widget.deleteLater()
