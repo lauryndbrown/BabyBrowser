@@ -32,9 +32,10 @@ class Browser_Widget(QWidget):
         self.move(geometry.topLeft())
 
 class Browser_Main_Widget(QMainWindow):
-    def __init__(self):
+    def __init__(self, browser=None):
         super().__init__()
         self.initUI()
+        self.browser = browser
     def initUI(self):
         #exitAction = QAction('Exit', '&Exit', self)
         #exitAction.setShortcut('Ctrl+Q')
@@ -85,15 +86,6 @@ class Browser_Main_Widget(QMainWindow):
         #self.setCentralWidget(self.htmlWidget)
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle('BabyBrowser')
-    def move_new_tab_button(self):
-        size = sum([self.tabBar.tabRect(i).width() for i in range(self.tabBar.count())])
-        height = self.tabBar.geometry().top()
-        width = self.width()
-        print("Size:", size)
-        if size > width:
-            self.new_tab_button.move(width-54, height)
-        else:
-            self.new_tab_button.move(size, height)
     def removeTab(self, index):
         if self.tabBar.count()==1:
             self.addDefaultTab()
@@ -105,12 +97,30 @@ class Browser_Main_Widget(QMainWindow):
     def addTab(self, tabName, widget):
         self.tabBar.addTab(widget, tabName)
     def fetch_url(self):
-        print(self.urlBar.text())
+        url = self.urlBar.text()
+        if self.browser:
+            dom = self.browser.fetch_url(url)
+            index = self.tabBar.currentIndex()
+            tab = self.tabBar.currentWidget()
+            #self.deleteWidgets(tab)
+            #del tab
+            widget = Browser_Widget()
+            Browser_GUI.render_dom(dom, widget)
+            self.addTab("New Tab", widget)
+            self.tabBar.setCurrentWidget(widget)
+            self.removeTab(index)
+            print(dom)
+        print(url)
+    def deleteWidgets(self, widget):
+        while widget.count():
+            item = layout.takeAt(0)
+            w = item.widget()
+            w.deleteLater()
 
 class Browser_GUI:
-    def __init__(self, dom):
+    def __init__(self, dom, browser=None):
         self.app = QApplication(sys.argv)
-
+        self.browser = browser
         # Load the default fonts 
         font_path_regular =  os.path.join("baby_browser", "fonts", "raleway", "Raleway-Regular.ttf")
         font_path_bold =  os.path.join("baby_browser", "fonts", "raleway", "Raleway-Bold.ttf")
@@ -128,23 +138,21 @@ class Browser_GUI:
         #self.widget.center()
         self.inside_body = False
         self.dom = dom
-        self.widget = Browser_Main_Widget()
+        self.widget = Browser_Main_Widget(browser)
         htmlWidget = Browser_Widget()
-        self.render_dom(self.dom, htmlWidget)
+        Browser_GUI.render_dom(self.dom, htmlWidget)
         if htmlWidget.title:
             self.widget.addTab(htmlWidget.title, htmlWidget)
         else:
             self.widget.addTab("         ", htmlWidget)
         self.widget.show()
         sys.exit(self.app.exec_())
-    def render_dom(self, dom, htmlWidget):
-        print(dom)
+    def render_dom(dom, htmlWidget):
         inside_body = False
-        layout = QGridLayout()
-        self.traverse_dom(dom.root, htmlWidget, layout, inside_body)
-    def traverse_dom(self, root, htmlWidget, layout, inside_body):
+        Browser_GUI.traverse_dom(dom.root, htmlWidget, inside_body)
+    def traverse_dom(root, htmlWidget, inside_body):
         for child in root.children:
-            self.traverse_dom(child, htmlWidget, layout, inside_body)
+            Browser_GUI.traverse_dom(child, htmlWidget, inside_body)
         if root.tag.lower()=="title":
             htmlWidget.setWindowTitle(root.content)
             htmlWidget.title = root.content
@@ -152,9 +160,6 @@ class Browser_GUI:
             inside_body = True
         if root.content and inside_body:
             text = QLabel(root.content, htmlWidget)
-            
-            #text.setText(root.content)
-            #layout.addWidget(text, 0, 0, -1, 1)
 
             
 
