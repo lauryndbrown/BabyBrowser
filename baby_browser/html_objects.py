@@ -6,6 +6,7 @@ class Html_Object:
         else:
             self.children = children
         self.attrs = attrs
+        self.parse_state = None
 class Tag(Html_Object):
     def __init__(self, tag, attrs, content=None, parent=None, children=None):
         super().__init__(parent, children, attrs)

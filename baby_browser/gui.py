@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -19,11 +20,8 @@ class Browser_Widget(QWidget):
         palette = self.palette()
         palette.setColor(self.backgroundRole(), Qt.white)
         self.setPalette(palette)
-        
-        #Add Test Button
+
         self.layout = QVBoxLayout(self)
-        #self.button = QPushButton("Button")
-        #self.layout.addWidget(self.button)
         self.setLayout(self.layout)
 
     def center(self):
@@ -42,6 +40,7 @@ class Browser_Main_Widget(QMainWindow):
         #exitAction.setStatusTip('Exit Application')
         #exitAction.triggered.connect(qApp.quit)
 
+
         self.statusBar()
         #menubar = self.menuBar()
         #fileMenu = menubar.addMenu('File')
@@ -58,6 +57,21 @@ class Browser_Main_Widget(QMainWindow):
 class Browser_GUI:
     def __init__(self, dom):
         self.app = QApplication(sys.argv)
+
+
+        # Load the default fonts 
+        font_path_regular =  os.path.join("baby_browser", "fonts", "raleway", "Raleway-Regular.ttf")
+        font_path_bold =  os.path.join("baby_browser", "fonts", "raleway", "Raleway-Bold.ttf")
+        font_path_italic =  os.path.join("baby_browser", "fonts", "raleway", "Raleway-Italic.ttf")
+        font_db = QFontDatabase()
+        font_db.addApplicationFont(font_path_regular)
+        font_db.addApplicationFont(font_path_bold)
+        font_db.addApplicationFont(font_path_italic)
+        ttf_font = QFont("Raleway", weight=QFont.Normal)
+        #ttf_font.setItalic(True)
+        #ttf_font.setBold(True)
+        self.app.setFont(ttf_font)
+
         #self.widget = Browser_Widget()
         #self.widget.center()
         self.inside_body = False
