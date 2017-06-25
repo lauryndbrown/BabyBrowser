@@ -1,12 +1,8 @@
 import re
 from baby_browser.css_objects import *
 #Tokens
-#t_CSS_WHOLE = re.compile("\s*(?P<selector>[#\.\w\-_]+)\s*\{\s*(?P<declarations>(?P<property>[\w-]+):\s*(?P<value>[\w-]+);\s*)+\}\s*")
 t_RULE = re.compile("\s*(?P<selector>[#\.\w\-_]+)\s*\{\s*(?P<declarations>[^}]+)\}") #Groups the identifier and the css rules
 t_DECLARATIONS = re.compile("(?P<property>[\w-]+):\s*(?P<value>[\w-]+);")
-#([\w-]+):\s*(\w+);
-#Whole CSS expression
-#\s*(\w+)\s*\{\s*(([\w-]+):\s*(\w+);)+\s*\}
 class CSS_Tokenizer:
     def __init__(self):
         pass
