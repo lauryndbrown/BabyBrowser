@@ -64,23 +64,11 @@ class BoxStyle:
     NONE = "none"
     HIDDEN = "hidden"
     VISIBLE = "visible"
-    def __init__(self, display, height=None, width=None, color=None, visibility=None, min_height=None, min_width=None, max_height=None, max_width=None):
-        self.display = display
-        if visibility:
-            self.visibility = BoxStyle.VISIBLE
-        else:
-            self.visibility = visibility
-        self.margin = BoxStyleAttribute()
-        self.padding = BoxStyleAttribute()
-        self.border = Border()
-        #width and height specify content only
-        self.height = height
-        self.width = width
-        self.min_height = min_height
-        self.min_width = min_width
-        self.max_height = max_height
-        self.max_width = max_width
-        self.background_color = color
+    def __init__(self, display):
+        self.properties = {"display":display, "height":None, "width":None, "background-color":None, "color":None, "visibility":BoxStyle.VISIBLE, "min_height":None, "min_width":None, "max_height":None, "max_width":None}
+        #self.margin = BoxStyleAttribute()
+        #self.padding = BoxStyleAttribute()
+        #self.border = Border()
 
 class Position:
     STATIC = "static"

@@ -11,28 +11,28 @@ class CSS_Tokenizer:
     def __init__(self):
         pass
     def tokenize(self, css_str, dom):
-        index = 0
-        while index<len(css_str):
-            index = self.parse(css_str, dom, index) 
-    def parse(self, css_str, dom, index):
-        add_to_index = 0
-        css = t_RULE.match(css_str[index:])
+        for css in re.finditer(t_RULE, css_str):
+            self.parse(css, dom) 
+    def parse(self, css, dom):
         print(css)
         if css:
             selector = css.group('selector')
             declarations = css.group('declarations')
             dom_element = dom.find_child_by_tag(selector)
-            print(css.group("selector"))
-            print(css.group("declarations"))
+            #print(css.group("selector"))
+            #print(css.group("declarations"))
             if dom_element:
-                render_obect = RenderObject(BoxStyle(BoxStyle.BLOCK))
+                render_object = RenderObject(BoxStyle(BoxStyle.BLOCK))
+                print(dom_element.tag)
                 for match in re.finditer(t_DECLARATIONS, declarations):
                     css_property =  match.group("property")
                     css_value =  match.group("value")
-                    print(css_property,css_value)
                     self.create_style(render_object, css_property, css_value)
+                dom_element.css = render_object
     def create_style(self, render_object, css_property, css_value):
-       if 
+        if css_property in render_object.box_style.properties:
+            print("   Adding:",css_property,css_value) 
+            render_object.box_style.properties[css_property] = css_value
                     
         
     
@@ -43,8 +43,6 @@ if __name__=="__main__":
     html_tokenizer = Html_Tokenizer()
     html_tokenizer.tokenize(html_str)
     print(html_tokenizer.dom)
-    print("Found: ", html_tokenizer.dom.find_child_by_tag("body"))
     css_str = "body{background-color:red;color:white;}"
     css_tokenizer = CSS_Tokenizer()
     css_tokenizer.tokenize(css_str, html_tokenizer.dom)
-    print(css_tokenizer.render_tree)
