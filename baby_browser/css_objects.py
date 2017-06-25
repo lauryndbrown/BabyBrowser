@@ -1,6 +1,5 @@
 class RenderObject:
-    def __init__(self, dom, boxstyle):
-        self.dom = dom
+    def __init__(self, boxstyle):
         self.box_style = boxstyle
 class CSSUnit:
     PIXEL = "px"
@@ -65,7 +64,7 @@ class BoxStyle:
     NONE = "none"
     HIDDEN = "hidden"
     VISIBLE = "visible"
-    def __init__(self, height, width, color, display, visibility=None, min_height=None, min_width=None, max_height=None, max_width=None):
+    def __init__(self, display, height=None, width=None, color=None, visibility=None, min_height=None, min_width=None, max_height=None, max_width=None):
         self.display = display
         if visibility:
             self.visibility = BoxStyle.VISIBLE
@@ -81,7 +80,8 @@ class BoxStyle:
         self.min_width = min_width
         self.max_height = max_height
         self.max_width = max_width
-        self.background-color = color
+        self.background_color = color
+
 class Position:
     STATIC = "static"
     RELATIVE = "relative"

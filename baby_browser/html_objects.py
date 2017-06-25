@@ -1,5 +1,5 @@
 class Html_Object:
-    def __init__(self, parent, children, attrs):
+    def __init__(self, parent, children, attrs, css=None):
         self.parent = parent
         if children==None:
             self.children = []
@@ -7,6 +7,7 @@ class Html_Object:
             self.children = children
         self.attrs = attrs
         self.parse_state = None
+        self.css = css
 class Tag(Html_Object):
     def __init__(self, tag, attrs, content=None, parent=None, children=None):
         super().__init__(parent, children, attrs)
@@ -17,8 +18,8 @@ class Tag(Html_Object):
     def __repr__(self):
         return self.__str__()
 class DOM:
-    def __init__(self):
-        self.root = None
+    def __init__(self, root=None):
+        self.root = root
         self.current_level = None
     def add_child(self, html_object):
         if self.root:
@@ -32,6 +33,17 @@ class DOM:
         self.current_level = self.current_level.parent
     def add_content(self, content):
         self.current_level.content = content 
+    def find_child_by_tag(self, child_name):
+       return self.find_child_by_tag_helper(self.root, child_name.lower())
+    def find_child_by_tag_helper(self, root, child_name):
+        if root:
+            if root.tag==child_name:
+                return root
+            for child in root.children:
+                result = self.find_child_by_tag_helper(child, child_name)
+                if result:
+                    return result
+
     def __str__(self):
         return self.str_traverse(self.root, 0)
     def str_traverse(self, root, level):
