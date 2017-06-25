@@ -19,8 +19,8 @@ class CSS_Tokenizer:
             selector = css.group('selector')
             declarations = css.group('declarations')
             dom_element = dom.find_child_by_tag(selector)
-            #print(css.group("selector"))
-            #print(css.group("declarations"))
+            #print(css.group("selector"), css.group("declarations"), dom_element)
+
             if dom_element:
                 render_object = RenderObject(BoxStyle(BoxStyle.BLOCK))
                 print(dom_element.tag)
@@ -39,10 +39,10 @@ class CSS_Tokenizer:
         
 if __name__=="__main__":
     from baby_browser.html_tokenizer import *
-    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\nHi\n</body>\n</html>"
+    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<h1>Hi</h1>\n</body>\n</html>"
     html_tokenizer = Html_Tokenizer()
     html_tokenizer.tokenize(html_str)
     print(html_tokenizer.dom)
-    css_str = "body{background-color:red;color:white;}"
+    css_str = "body{background-color:red;color:white;}\nh1{background-color:white;}"
     css_tokenizer = CSS_Tokenizer()
     css_tokenizer.tokenize(css_str, html_tokenizer.dom)
