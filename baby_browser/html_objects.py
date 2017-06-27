@@ -46,30 +46,36 @@ class DOM:
         self.current_level = self.current_level.parent
     def add_content(self, content):
         self.current_level.content = content 
-    def find_child_by_class(self, child_name, root=None):
+    def find_children_by_class(self, child_name, root=None):
        if root:
-            return self._find_child_by_tag_helper(root, child_name.lower(), DOM.FIND_BY_CLASS)
-       return self._find_child_by_tag_helper(self.root, child_name.lower(), DOM.FIND_BY_CLASS)
+            return self._find_children_helper(root, child_name.lower(), DOM.FIND_BY_CLASS, [])
+       return self._find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_CLASS, [])
     def find_child_by_id(self, child_name, root=None):
        if root:
-            return self._find_child_by_tag_helper(root, child_name.lower(), DOM.FIND_BY_ID)
-       return self._find_child_by_tag_helper(self.root, child_name.lower(), DOM.FIND_BY_ID)
-    def find_child_by_tag(self, child_name, root=None):
+            results, result_root = self._find_children_helper(root, child_name.lower(), DOM.FIND_BY_ID, [])
+       else:
+            results, result_root = self._find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_ID, [])
+       if results:
+            return results[0]
+       else:
+            return None
+    def find_children_by_tag(self, child_name, root=None):
        if root:
-            return self._find_child_by_tag_helper(root, child_name.lower(), DOM.FIND_BY_TAG)
-       return self._find_child_by_tag_helper(self.root, child_name.lower(), DOM.FIND_BY_TAG)
-    def _find_child_helper(self, root, child_name, find_by):
+            return self._find_children_helper(root, child_name.lower(), DOM.FIND_BY_TAG, [])
+       return self._find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_TAG, [])
+    def _find_children_helper(self, root, child_name, find_by, results=[]):
+        #print("Root:{}, Name:{}, Find:{}, Results:{}".format(root, child_name, find_by, results))
         if root:
             if find_by==DOM.FIND_BY_TAG and root.tag==child_name:
-                return root
-            elif find_by==DOM.FIND_BY_CLASS and root.class_name==child_name:
-                return root
-            elif find_by==DOM.FIND_BY_ID and root.id_name==child_name:
-                return root
+                results.append(root)
+            elif find_by==DOM.FIND_BY_CLASS and root.attrs[CLASS]==child_name:
+                results.append(root)
+            elif find_by==DOM.FIND_BY_ID and root.attrs[ID]==child_name:
+                results.append(root)
+                return results
             for child in root.children:
-                result = self.find_child_by_tag_helper(child, child_name, find_by)
-                if result:
-                    return result
+                child_results = self._find_children_helper(child, child_name, find_by, results)
+            return results
 
     def __str__(self):
         return self.str_traverse(self.root, 0)
