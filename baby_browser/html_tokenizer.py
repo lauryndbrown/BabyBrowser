@@ -31,8 +31,9 @@ class Html_Tokenizer:
         if attrs:
             print("-------------------\n")
             print(tag, attrs)
-            print("-------------------\n")
             self.p_opentag_attrs(tag, attrs)
+            print(tag.attrs)
+            print("-------------------\n")
         self.dom.add_child(tag) 
     def handle_closetag(self, tag):
         print("Found end tag:", tag)
@@ -97,7 +98,7 @@ class Html_Tokenizer:
             add_to_index = 1
         return add_to_index+index
 if __name__=="__main__":
-    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div class=\"hello\">Hi</div>\n</body>\n</html>"
+    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n</body>\n</html>"
     print(html_str)
     tokenizer = Html_Tokenizer()
     tokenizer.tokenize(html_str) 
