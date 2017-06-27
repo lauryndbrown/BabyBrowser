@@ -1,7 +1,13 @@
 import re
 from baby_browser.html_objects import * 
 #Tokens
-t_OPENTAG = re.compile("<(\w+)>")
+t_OPENTAG = re.compile("\s*<(?P<tag>\w+)\s*(?P<attrs>[\w\s\"=]+)?>")
+t_ATTRIBUTES = re.compile("(?P<attr_name>\w+)=\"(?P<attr_value>[\w\s\-_]+)\"\s*")
+#\s*<(?P<tag>\w+)\s*(?:class=["|'](?P<class>\w+)["|'])?\s*(?:id="(?P<id>\w+)")?>
+#\s*(?P<tag>\w+)\s*(?:class="(?P<class>\w+)")?\s*(?:id="(?P<id>\w+)")?
+#\s*(?P<tag>\w+)\s*[(?:class="(?P<class>\w+)"\s*)|(?:id="(?P<id>\w+)"\s*)]{0,2}
+#\s*(?P<tag>\w+)\s*(?:(?P<attr_name>\w+)="(?P<attr_value>\w+)"\s*)*
+#\s*(?P<tag>\w+)\s*(?:(?:class=\"(?P<class_name>\w+)\"\s*)|(?:id=\"(?P<id_name>\w+)\"\s*)){0,2}
 t_CLOSETAG = re.compile("</(\w+)>")
 t_DATA = re.compile("[^<>]+")
 t_WHITESPACE = re.compile("\s+")
@@ -76,7 +82,7 @@ class Html_Tokenizer:
             add_to_index = 1
         return add_to_index+index
 if __name__=="__main__":
-    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\nHi\n</body>\n</html>"
+    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div class=\"hello\">Hi</div>\n</body>\n</html>"
     tokenizer = Html_Tokenizer()
     tokenizer.tokenize(html_str) 
     print(tokenizer.dom)

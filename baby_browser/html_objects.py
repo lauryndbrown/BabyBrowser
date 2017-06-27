@@ -1,15 +1,17 @@
 class Html_Object:
-    def __init__(self, parent, children, attrs, css=None):
+    CLASS = "class"
+    ID = "id"
+    def __init__(self, parent, children, css=None):
         self.parent = parent
         if children==None:
             self.children = []
         else:
             self.children = children
-        self.attrs = attrs
+        self.attrs = {CLASS:None, ID:None}
         self.parse_state = None
         self.css = css
 class Tag(Html_Object):
-    def __init__(self, tag, attrs, content=None, parent=None, children=None):
+    def __init__(self, tag, content=None, parent=None, children=None):
         super().__init__(parent, children, attrs)
         self.tag = tag
         self.content = content
@@ -18,6 +20,10 @@ class Tag(Html_Object):
     def __repr__(self):
         return self.__str__()
 class DOM:
+    FIND_BY_TAG = "tag"
+    FIND_BY_ID = "id"
+    FIND_BY_CLASS = "class"
+
     def __init__(self, root=None):
         self.root = root
         self.current_level = None
@@ -33,14 +39,28 @@ class DOM:
         self.current_level = self.current_level.parent
     def add_content(self, content):
         self.current_level.content = content 
-    def find_child_by_tag(self, child_name):
-       return self.find_child_by_tag_helper(self.root, child_name.lower())
-    def find_child_by_tag_helper(self, root, child_name):
+    def find_child_by_class(self, child_name, root=None):
+       if root:
+            return self._find_child_by_tag_helper(root, child_name.lower(), DOM.FIND_BY_CLASS)
+       return self._find_child_by_tag_helper(self.root, child_name.lower(), DOM.FIND_BY_CLASS)
+    def find_child_by_id(self, child_name, root=None):
+       if root:
+            return self._find_child_by_tag_helper(root, child_name.lower(), DOM.FIND_BY_ID)
+       return self._find_child_by_tag_helper(self.root, child_name.lower(), DOM.FIND_BY_ID)
+    def find_child_by_tag(self, child_name, root=None):
+       if root:
+            return self._find_child_by_tag_helper(root, child_name.lower(), DOM.FIND_BY_TAG)
+       return self._find_child_by_tag_helper(self.root, child_name.lower(), DOM.FIND_BY_TAG)
+    def _find_child_helper(self, root, child_name, find_by):
         if root:
-            if root.tag==child_name:
+            if find_by==DOM.FIND_BY_TAG and root.tag==child_name:
+                return root
+            elif find_by==DOM.FIND_BY_CLASS and root.class_name==child_name:
+                return root
+            elif find_by==DOM.FIND_BY_ID and root.id_name==child_name:
                 return root
             for child in root.children:
-                result = self.find_child_by_tag_helper(child, child_name)
+                result = self.find_child_by_tag_helper(child, child_name, find_by)
                 if result:
                     return result
 

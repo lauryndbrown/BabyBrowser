@@ -3,6 +3,11 @@ from baby_browser.css_objects import *
 #Tokens
 t_RULE = re.compile("\s*(?P<selector>[#\.\w\-_]+)\s*\{\s*(?P<declarations>[^}]+)\}") #Groups the identifier and the css rules
 t_DECLARATIONS = re.compile("(?P<property>[\w-]+):\s*(?P<value>[\w-]+);")
+t_SELECTOR = re.compile("\s*(?P<symbol>\.|#)?(?P<name>[\w-]+)\s*")
+                
+CLASS_SELECTOR = "."
+ID_SELECTOR = "#"
+TAG_SELECTOR = None
 class CSS_Tokenizer:
     def __init__(self):
         pass
@@ -14,9 +19,9 @@ class CSS_Tokenizer:
         if css:
             selector = css.group('selector')
             declarations = css.group('declarations')
+            self.get_dom_element(selector, dom)
             dom_element = dom.find_child_by_tag(selector)
             #print(css.group("selector"), css.group("declarations"), dom_element)
-
             if dom_element:
                 render_object = RenderObject(BoxStyle(BoxStyle.BLOCK))
                 print(dom_element.tag)
@@ -25,14 +30,18 @@ class CSS_Tokenizer:
                     css_value =  match.group("value")
                     self.create_style(render_object, css_property, css_value)
                 dom_element.css = render_object
+    def get_dom_element(self, selector, dom):
+        root = dom.root
+        for match in re.finditer(t_SELECTOR, selector):
+            symbol = match.group("symbol")
+            name = match.group("name")
+            if symbol==CLASS_SELECTOR:
+                
     def create_style(self, render_object, css_property, css_value):
         if css_property in render_object.box_style.properties:
             print("   Adding:",css_property,css_value) 
             render_object.box_style.properties[css_property] = css_value
                     
-        
-    
-        
 if __name__=="__main__":
     from baby_browser.html_tokenizer import *
     html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<h1>Hi</h1>\n</body>\n</html>"
