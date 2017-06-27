@@ -49,7 +49,7 @@ class Browser_Main_Widget(QMainWindow):
         self.initUI()
         self.browser = browser
     def initUI(self):
-        icon_path =  os.path.join("baby_browser", "images", "favicon-tint.ico")
+        icon_path =  os.path.join("baby_browser", "images", "crib.png")
         self.setWindowIcon(QIcon(icon_path))
 
 
