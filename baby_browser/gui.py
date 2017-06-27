@@ -117,12 +117,9 @@ class Browser_Main_Widget(QMainWindow):
         self.favMenu.setStyleSheet("QMenu { menu-scrollable: 1; }")
         print(self.browser.bookmarks)
         for bookmark in self.browser.bookmarks:
-            action = QAction(bookmark.url, self)
+            action = self.create_bookmark(bookmark.url, bookmark.title)
             action.triggered.connect(lambda: self.fetch_url(bookmark.url))
             self.favMenu.addAction(action)
-
-
-
         
         self.addDefaultTab()
         
@@ -184,14 +181,17 @@ class Browser_Main_Widget(QMainWindow):
         print("-----!!! Title:", title) 
         self.browser.add_bookmark(url, title)
         self.favorite_button.setIcon(self.fav_full_icon)
+        action = self.add_bookmark(url, title)
+        action.triggered.connect(lambda: self.fetch_url(url))
+        self.favMenu.addAction(action)
+    def create_bookmark(self, url, title=None, icon=None):
         if title:
             action = QAction(title, self)
             action.setStatusTip(title+"\n"+url)
         else:
             action = QAction(url, self)
             action.setStatusTip(url)
-        action.triggered.connect(lambda: self.fetch_url(url))
-        self.favMenu.addAction(action)
+        return action
     def remove_bookmark(self):
         url = self.browser.current_url
         tab_index = self.tabBar.currentIndex()
