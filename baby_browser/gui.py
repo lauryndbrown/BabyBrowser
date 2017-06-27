@@ -184,7 +184,7 @@ class Browser_Main_Widget(QMainWindow):
         print("-----!!! Title:", title) 
         self.browser.add_bookmark(url, title)
         self.favorite_button.setIcon(self.fav_full_icon)
-        action = self.add_bookmark(url, title)
+        action = self.create_bookmark(url, title)
         action.triggered.connect(lambda: self.fetch_url(url))
         self.favMenu.addAction(action)
     def create_bookmark(self, url, title=None, icon=None):
