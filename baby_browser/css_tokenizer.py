@@ -4,6 +4,7 @@ from baby_browser.css_objects import *
 #Tokens
 t_RULE = re.compile("\s*(?P<selector>[#\.\w\-\s,_]+)\s*\{\s*(?P<declarations>[^}]+)\}") #Groups the identifier and the css rules
 t_DECLARATIONS = re.compile("(?P<property>[\w-]+):\s*(?P<value>[\w-]+);")
+t_NUM_UNIT = re.compile("(?P<value>\d+)(?P<unit>pt|px)")
 t_SELECTOR_GROUPS = re.compile("\s*(?P<selector>[#\.\w\-\s_]+)\s*")
 t_SELECTOR = re.compile("\s*(?P<symbol>\.|#)?(?P<name>[\w-]+)\s*")
                 
@@ -56,8 +57,14 @@ class CSS_Tokenizer:
     def create_style(self, render_object, css_property, css_value):
             for prop in render_object.properties:
                 if css_property in prop.properties:
-                    print("   Adding:",css_property,css_value) 
-                    prop.properties[css_property] = css_value
+                    num_unit = re.match(t_NUM_UNIT, css_value)
+                    if num_unit:
+                        css_unit = CSSUnit(num_unit.group("value"), num_unit.group("unit")) 
+                        print("   Adding:",css_property,css_unit) 
+                        prop.properties[css_property] = css_unit
+                    else:
+                        print("   Adding:",css_property,css_value) 
+                        prop.properties[css_property] = css_value
                     
 if __name__=="__main__":
     from baby_browser.html_tokenizer import *

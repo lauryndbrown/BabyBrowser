@@ -3,6 +3,12 @@ class RenderObject:
         self.box_style = BoxStyle(display)
         self.font = Font()
         self.properties = [self.box_style, self.font]
+    def get_set_properties(self):
+        result = {}
+        for prop in self.properties:
+            prop_result = prop.get_set_properties()
+            result.update(prop_result)
+        return result
     def __str__(self):
         result = []
         for prop in self.properties:
@@ -15,8 +21,11 @@ class CSSUnit:
     POINT = "pt"
     PERCENT = "%"
     TYPES = [PIXEL, POINT, PERCENT]
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, value, unit):
+        self.unit = unit
+        self.value = int(value)
+    def __str__(self):
+        return "{}{}".format(self.value, self.unit)
 class Text:
     CENTER = "center"
     LEFT = "left"
@@ -38,16 +47,27 @@ class Text:
         self.decoration = decoration
         self.transform = transform
 class CSS_Style:
+    def get_set_properties(self):
+        result = {}
+        for key in self.properties:
+            if self.properties[key]:
+                result[key] = self.properties[key]
+        return result
     def __str__(self):
         result = []
         for key in self.properties:
             if self.properties[key]:
-                result.append(key+":"+self.properties[key])
+                result.append(key+":"+str(self.properties[key]))
         return str(result)
     def __repr__(self):
         return str(self)
         
 class Font(CSS_Style):
+    #Property Names
+    p_FONT_FAMILY = "font-family"
+    p_FONT_STYLE = "font-style"
+    p_FONT_SIZE = "font-size"
+    p_FONT_WEIGHT = "font-weight"
     #Font Constants
     FONT_STYLE_NORMAL = "normal"
     FONT_STYLE_ITALIC = "italic"
@@ -57,7 +77,7 @@ class Font(CSS_Style):
     FONT_WEIGHTS = [FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD]
     def __init__(self):
         super().__init__()
-        self.properties = {"font-family":None, "font-style":None, "font-size":None, "font-weight":None}
+        self.properties = {Font.p_FONT_FAMILY:None, Font.p_FONT_STYLE:None, Font.p_FONT_SIZE:None, Font.p_FONT_WEIGHT:None}
 class BoxStyleAttribute:
     def __init__(self, top=None, right=None, bottom=None, left=None):
         self.top = top

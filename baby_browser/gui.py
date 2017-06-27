@@ -190,18 +190,7 @@ class Browser_GUI:
             title = root.content.rstrip()
             Browser_GUI.HTML_RENDER.set_page_title(title, htmlWidget)
         if root.parse_state==IN_BODY:
-            tag = root.tag.lower()
-            content = root.content
-            if tag=="h1":
-                text = QLabel(content)
-                font = QFont("Raleway")
-                font.setPointSize(36)
-                font.setBold(True)
-                text.setFont(font)
-                layout.addWidget(text)
-            elif content:
-                text = QLabel(root.content)
-                layout.addWidget(text)
+            Browser_GUI.HTML_RENDER.render_in_body_content(root, layout)
         
 if __name__=="__main__":
     gui = Browser_GUI()

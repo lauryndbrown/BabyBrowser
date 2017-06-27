@@ -2,20 +2,20 @@ h1, h2, h3, h4, h5, h6{
   font-weight:bold;  
 }
 h1{
-  font-size: 36;
+  font-size: 36pt;
 }
 h2{
-  font-size: 30;
+  font-size: 30pt;
 }
 h3{
-  font-size: 25;
+  font-size: 25pt;
 }
 h4{
-  font-size: 20;
+  font-size: 20pt;
 }
 h5{
-  font-size: 16;
+  font-size: 16pt;
 }
 h6{
-  font-size: 14;
+  font-size: 14pt;
 }
