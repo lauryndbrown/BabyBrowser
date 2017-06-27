@@ -1,16 +1,21 @@
 from baby_browser.gui import * 
 from baby_browser.html_tokenizer import * 
+from baby_browser.css_tokenizer import * 
 from baby_browser.networking import * 
 class BabyBrowser:
     BOOKMARK_FILE = os.path.join("baby_browser", "bookmarks.txt")
+    DEFAULT_CSS = os.path.join("baby_browser", "browser.css")
     def __init__(self):
         self.html_tokenizer = Html_Tokenizer()
+        self.css_tokenizer = CSS_Tokenizer()
         self.gui = None
         self.networking = Network()
         self.previous_pages = []
         self.forward_pages = []
         self.current_url = None
         bookmarks_file = open(BabyBrowser.BOOKMARK_FILE, 'r+')
+        default_css = open(BabyBrowser.DEFAULT_CSS, 'r')
+        self.default_css = list(default_css)
         self.bookmarks = list(bookmarks_file)
     def fetch_url(self, url):
         response = self.network_get(url)
@@ -22,6 +27,8 @@ class BabyBrowser:
         return self.networking.get(url) 
     def tokenize_html(self, html):
         self.html_tokenizer.tokenize(html)
+        
+        self.css_tokneizer.tokenize(self.default_css, self.html_tokenizer.dom) #Default Browser Styles
         return self.html_tokenizer.dom
     def show_gui(self):
         self.gui = Browser_GUI(self) 

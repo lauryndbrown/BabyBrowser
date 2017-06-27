@@ -1,6 +1,15 @@
 class RenderObject:
-    def __init__(self, boxstyle):
-        self.box_style = boxstyle
+    def __init__(self, display):
+        self.box_style = BoxStyle(display)
+        self.font = Font()
+        self.properties = [self.box_style, self.font]
+    def __str__(self):
+        result = []
+        for prop in self.properties:
+            result += str(prop)
+        return "".join(result)
+    def __repr__(self):
+        return str(self)
 class CSSUnit:
     PIXEL = "px"
     POINT = "pt"
@@ -28,18 +37,27 @@ class Text:
         self.align = align
         self.decoration = decoration
         self.transform = transform
-class Font:
-    STYLE_NORMAL = "normal"
-    STYLE_ITALIC = "italic"
-    STYLES = [STYLE_NORMAL, STYLE_ITALIC]
-    WEIGHT_NORMAL = "normal"
-    WEIGHT_BOLD = "bold"
-    FONT_WEIGHTS = [WEIGHT_NORMAL, WEIGHT_BOLD]
-    def __init__(self, family=None, style=None, size=None, weight=None):
-        self.family = family
-        self.style = style
-        self.size = size
-        self.weight = weight
+class CSS_Style:
+    def __str__(self):
+        result = []
+        for key in self.properties:
+            if self.properties[key]:
+                result.append(key+":"+self.properties[key])
+        return str(result)
+    def __repr__(self):
+        return str(self)
+        
+class Font(CSS_Style):
+    #Font Constants
+    FONT_STYLE_NORMAL = "normal"
+    FONT_STYLE_ITALIC = "italic"
+    FONT_STYLES = [FONT_STYLE_NORMAL, FONT_STYLE_ITALIC]
+    FONT_WEIGHT_NORMAL = "normal"
+    FONT_WEIGHT_BOLD = "bold"
+    FONT_WEIGHTS = [FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD]
+    def __init__(self):
+        super().__init__()
+        self.properties = {"font-family":None, "font-style":None, "font-size":None, "font-weight":None}
 class BoxStyleAttribute:
     def __init__(self, top=None, right=None, bottom=None, left=None):
         self.top = top
@@ -57,7 +75,7 @@ class BorderStyle(BoxStyleAttribute):
         super().__init__(top, right, bottom, left)
         self.style = style
         self.color = color
-class BoxStyle:
+class BoxStyle(CSS_Style):
     BLOCK = "block"
     INLINE = "inline"
     INLINE_BLOCK = "inline-block"
@@ -65,6 +83,7 @@ class BoxStyle:
     HIDDEN = "hidden"
     VISIBLE = "visible"
     def __init__(self, display):
+        super().__init__()
         self.properties = {"display":display, "height":None, "width":None, "background-color":None, "color":None, "visibility":BoxStyle.VISIBLE, "min_height":None, "min_width":None, "max_height":None, "max_width":None}
         #self.margin = BoxStyleAttribute()
         #self.padding = BoxStyleAttribute()

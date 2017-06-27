@@ -79,13 +79,16 @@ class DOM:
 
     def __str__(self):
         return self.str_traverse(self.root, 0)
-    def str_traverse(self, root, level):
+    def str_css(self):
+        return self.str_traverse(self.root, 0, True)
+    def str_traverse(self, root, level, css=False):
         lst_root = "  "*level+str(root)
-        if root.content:
+        if root.content and not css:
             lst_root += "\n"+("  "*(level+1))+str(root.content)
+        elif root.css and css:
+            lst_root += "\n"+("  "*(level+1))+str(root.css)
         for child in root.children:
-            lst_root+= "\n"+self.str_traverse(child, level+1)
-        #lst_root+= "\n"+"  "*level+str(root)
+            lst_root+= "\n"+self.str_traverse(child, level+1, css)
         return lst_root
     def __repr__(self):
         return self.__str__()
