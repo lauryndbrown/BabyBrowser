@@ -2,8 +2,9 @@ import os
 import re
 from baby_browser.css_objects import *
 #Tokens
-t_RULE = re.compile("\s*(?P<selector>[#\.\w\-_]+)\s*\{\s*(?P<declarations>[^}]+)\}") #Groups the identifier and the css rules
+t_RULE = re.compile("\s*(?P<selector>[#\.\w\-\s,_]+)\s*\{\s*(?P<declarations>[^}]+)\}") #Groups the identifier and the css rules
 t_DECLARATIONS = re.compile("(?P<property>[\w-]+):\s*(?P<value>[\w-]+);")
+t_SELECTOR_GROUPS = re.compile("\s*(?P<selector>[#\.\w\-\s_]+)\s*")
 t_SELECTOR = re.compile("\s*(?P<symbol>\.|#)?(?P<name>[\w-]+)\s*")
                 
 CLASS_SELECTOR = "."
@@ -18,15 +19,19 @@ class CSS_Tokenizer:
     def parse(self, css, dom):
         print(css)
         if css:
-            selector = css.group('selector')
+            selectors = css.group('selector')
             declarations = css.group('declarations')
-            elements = self.get_dom_elements(selector, dom)
-            print(elements)
-            for element in elements:
-                self.add_render_element(element, declarations)
+            for match in re.finditer(t_SELECTOR_GROUPS, selectors):
+                elements = self.get_dom_elements(match.group("selector"), dom)
+                print(elements)
+                for element in elements:
+                    self.add_render_element(element, declarations)
     def add_render_element(self, dom_element, declarations):
             if dom_element:
-                render_object = RenderObject(BoxStyle.BLOCK)
+                if dom_element.css:
+                    render_object = dom_element.css
+                else:
+                    render_object = RenderObject(BoxStyle.BLOCK)
                 print(dom_element.tag)
                 for match in re.finditer(t_DECLARATIONS, declarations):
                     css_property =  match.group("property")
