@@ -25,9 +25,14 @@ HTML = "html"
 HEAD = "head"
 class Html_Tokenizer:
     def handle_opentag(self, tag, attrs):
-        print("Found start tag:", tag)
-        tag = Tag(tag, attrs)
+        print("Found start tag:", tag, attrs)
+        tag = Tag(tag)
         tag.parse_state = self.current_state 
+        if attrs:
+            print("-------------------\n")
+            print(tag, attrs)
+            print("-------------------\n")
+            self.p_opentag_attrs(tag, attrs)
         self.dom.add_child(tag) 
     def handle_closetag(self, tag):
         print("Found end tag:", tag)
@@ -36,14 +41,23 @@ class Html_Tokenizer:
         self.dom.add_content(data)
         print("Found data:", data)
     def p_opentag(self, match):
-        tag = match.group(1)
+        tag = match.group("tag")
+        attrs = match.group("attrs")
+        self.set_opentag_state(tag)
+        return tag, attrs, len(match.group(0))
+    def p_opentag_attrs(self, tag, attrs):
+        print(attrs)
+        for match in re.finditer(t_ATTRIBUTES, attrs):
+            attr_name = match.group("attr_name")
+            attr_value = match.group("attr_value")
+            tag.add_attr(attr_name, attr_value)
+    def set_opentag_state(self, tag):
         if tag.lower()==HTML:
             self.current_state = BEFORE_HEAD
         elif tag.lower()==HEAD:
             self.current_state = IN_HEAD
         elif tag.lower()==BODY:
             self.current_state = IN_BODY
-        return tag, None, len(tag)
     def p_closetag(self, match):
         tag = match.group(1)
         if tag.lower()==HTML:
@@ -68,7 +82,8 @@ class Html_Tokenizer:
         if opentag:
             tag, attrs, tag_len = self.p_opentag(opentag)
             self.handle_opentag(tag, attrs)
-            add_to_index = tag_len+2
+            add_to_index = tag_len
+            print("Add to Index:", add_to_index)
         elif closetag:
             tag, attrs, tag_len = self.p_closetag(closetag)
             self.handle_closetag(tag)
@@ -83,6 +98,7 @@ class Html_Tokenizer:
         return add_to_index+index
 if __name__=="__main__":
     html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div class=\"hello\">Hi</div>\n</body>\n</html>"
+    print(html_str)
     tokenizer = Html_Tokenizer()
     tokenizer.tokenize(html_str) 
     print(tokenizer.dom)

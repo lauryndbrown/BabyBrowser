@@ -1,6 +1,6 @@
+CLASS = "class"
+ID = "id"
 class Html_Object:
-    CLASS = "class"
-    ID = "id"
     def __init__(self, parent, children, css=None):
         self.parent = parent
         if children==None:
@@ -12,9 +12,16 @@ class Html_Object:
         self.css = css
 class Tag(Html_Object):
     def __init__(self, tag, content=None, parent=None, children=None):
-        super().__init__(parent, children, attrs)
+        super().__init__(parent, children)
         self.tag = tag
         self.content = content
+    def add_attr(self, attr_name, attr_value):
+        if attr_name.lower()==CLASS:
+            self.attrs[CLASS] = attr_value
+        elif attr_name.lower()==ID:
+            self.attrs[ID] = attr_value
+        else: 
+            self.attrs[attr_name] = attr_value
     def __str__(self):
         return self.tag
     def __repr__(self):
