@@ -53,6 +53,7 @@ class Browser_Main_Widget(QMainWindow):
     def initUI(self):
         icon_path =  os.path.join("baby_browser", "images", "crib.png")
         self.setWindowIcon(QIcon(icon_path))
+        self.page_icon = QIcon(os.path.join("baby_browser", "images", "page.png"))
 
 
         #Tabs
@@ -136,6 +137,8 @@ class Browser_Main_Widget(QMainWindow):
     def addTab(self, tabName, widget):
         self.tabBar.addTab(widget, tabName)
         self.tabBar.setCurrentWidget(widget)
+        index = self.tabBar.currentIndex()
+        self.tabBar.setTabIcon(index, self.page_icon)
     def fetch_url(self, url=None):
         if not url:
             url = self.urlBar.text()
@@ -191,6 +194,10 @@ class Browser_Main_Widget(QMainWindow):
         else:
             action = QAction(url, self)
             action.setStatusTip(url)
+        if icon:
+            action.setIcon(icon)
+        else:
+            action.setIcon(self.page_icon)
         return action
     def remove_bookmark(self):
         url = self.browser.current_url
