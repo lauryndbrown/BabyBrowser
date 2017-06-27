@@ -28,7 +28,9 @@ class Browser_Widget(QWidget):
         scrollArea = QScrollArea()
         scrollArea.setWidgetResizable(True)
         self.widget = QWidget()
-        self.widget.setLayout(QVBoxLayout(self))
+        widget_layout = QVBoxLayout(self)
+        widget_layout.setAlignment(Qt.AlignTop)
+        self.widget.setLayout(widget_layout)
         scrollArea.setWidget(self.widget)
 
         #Scroll Area Layout
@@ -46,8 +48,8 @@ class Browser_Widget(QWidget):
 class Browser_Main_Widget(QMainWindow):
     def __init__(self, browser=None):
         super().__init__()
-        self.initUI()
         self.browser = browser
+        self.initUI()
     def initUI(self):
         icon_path =  os.path.join("baby_browser", "images", "crib.png")
         self.setWindowIcon(QIcon(icon_path))
@@ -105,17 +107,21 @@ class Browser_Main_Widget(QMainWindow):
         toolbar.addWidget(self.urlBar)
         toolbar.addSeparator()
         toolbar.addWidget(submit_button)
+        
+        #Menu Bar
+        mainMenu = self.menuBar()
+        self.favMenu = mainMenu.addMenu('Bookmarks')
+        print(self.browser.bookmarks)
+        for bookmark in self.browser.bookmarks:
+            action = QAction(bookmark, self)
+            action.triggered.connect(lambda: self.fetch_url(bookmark))
+            self.favMenu.addAction(action)
+
 
 
         
         self.addDefaultTab()
         
-        #ScrollArea
-        #Add html widget
-        #layout = QVBoxLayout() 
-        #layout.addWidget(self.htmlWidget)
-        #tab1.setLayout(layout)
-        #self.setCentralWidget(self.htmlWidget)
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle('BabyBrowser')
     def removeTab(self, index, no_add=False):
@@ -129,20 +135,15 @@ class Browser_Main_Widget(QMainWindow):
     def addTab(self, tabName, widget):
         self.tabBar.addTab(widget, tabName)
         self.tabBar.setCurrentWidget(widget)
-        #scroll = QScrollArea()
-        #scroll.setWidget(widget)
-        #scroll.setWidgetResizable(True)
-        #scroll.setFixedHeight(400)
-        #scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        #layout = QVBoxLayout(self.tabBar)
-        #layout.addWidget(scroll)
     def fetch_url(self, url=None):
         if not url:
             url = self.urlBar.text()
+        else:
+            self.urlBar.setText(url)
         print(url)
         if self.browser:
             if url in self.browser.bookmarks:
-                self.favorite_button.setIcon(self.fav_fill_icon)
+                self.favorite_button.setIcon(self.fav_full_icon)
             else:
                 self.favorite_button.setIcon(self.fav_border_icon)
 
@@ -165,16 +166,29 @@ class Browser_Main_Widget(QMainWindow):
             url = self.browser.go_forward()
             self.fetch_url(url)
     def toggle_bookmark(self):
-        if self.browser.current_url in self.browser.bookmarks:
+        if self.browser.current_url not in self.browser.bookmarks:
             self.add_bookmark()
         else:
             self.remove_bookmark()
     def add_bookmark(self):
-        self.browser.add_bookmark(self.browser.current_url)
-        self.favorite_button.setIcon(self.fav_fill_icon)
+        url = self.browser.current_url
+        self.browser.add_bookmark(url)
+        self.favorite_button.setIcon(self.fav_full_icon)
+        action = QAction(url, self)
+        action.triggered.connect(lambda: self.fetch_url(url))
+        self.favMenu.addAction(action)
     def remove_bookmark(self):
-        self.browser.remove_bookmark(self.browser.current_url)
+        url = self.browser.current_url
+        self.browser.remove_bookmark(url)
         self.favorite_button.setIcon(self.fav_border_icon)
+        for action in self.favMenu.actions():
+            print("Action:", action.text())
+            if action.text()==url:
+                self.favMenu.removeAction(action)
+                break
+    def closeEvent(self, event):
+        self.browser.on_close()
+
             
 class Browser_GUI:
     HTML_RENDER = QT_HTML_Renderer()

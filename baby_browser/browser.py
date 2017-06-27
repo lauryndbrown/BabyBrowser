@@ -13,15 +13,15 @@ class BabyBrowser:
         self.previous_pages = []
         self.forward_pages = []
         self.current_url = None
-        bookmarks_file = open(BabyBrowser.BOOKMARK_FILE, 'r+')
-        default_css = open(BabyBrowser.DEFAULT_CSS, 'r')
-        self.default_css = "".join(list(default_css))
-        self.bookmarks = list(bookmarks_file)
+        with open(BabyBrowser.BOOKMARK_FILE, 'r') as bookmarks_file:
+            self.bookmarks = list(bookmarks_file)
+        with open(BabyBrowser.DEFAULT_CSS, 'r') as default_css:
+            self.default_css = "".join(list(default_css))
     def fetch_url(self, url):
         response = self.network_get(url)
-        if self.current_url and self.current_url!=url:
-            self.previous_pages.append(self.current_url)
-        self.current_url = response
+        if self.current_url!=url:
+            self.previous_pages.append(url)
+        self.current_url = url
         return self.tokenize_html(response)
     def network_get(self, url):
         return self.networking.get(url) 
@@ -46,6 +46,11 @@ class BabyBrowser:
     def remove_bookmark(self, url):
         if url in self.bookmarks:
             self.bookmarks.remove(url)
+    def on_close(self):
+        with open(BabyBrowser.BOOKMARK_FILE, 'w') as bookmarks_file:
+            for url in self.bookmarks:
+                bookmarks_file.write(url)
+
     
 
 if __name__=="__main__":
