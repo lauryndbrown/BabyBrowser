@@ -17,7 +17,7 @@ class Tag(Html_Object):
         self.content = content
     def add_attr(self, attr_name, attr_value):
         if attr_name.lower()==CLASS:
-            self.attrs[CLASS] = attr_value
+            self.attrs[CLASS] = attr_value.split()
         elif attr_name.lower()==ID:
             self.attrs[ID] = attr_value
         else: 
@@ -68,7 +68,7 @@ class DOM:
         if root:
             if find_by==DOM.FIND_BY_TAG and root.tag==child_name:
                 results.append(root)
-            elif find_by==DOM.FIND_BY_CLASS and root.attrs[CLASS]==child_name:
+            elif find_by==DOM.FIND_BY_CLASS and root.attrs[CLASS] and child_name in root.attrs[CLASS]:
                 results.append(root)
             elif find_by==DOM.FIND_BY_ID and root.attrs[ID]==child_name:
                 results.append(root)
