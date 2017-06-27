@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from baby_browser.html_tokenizer import *
+from baby_browser.qt_html_renderer import *
 #Address bar for inserting a URI
 #Back and forward buttons
 #Bookmarking options
@@ -154,6 +155,7 @@ class Browser_Main_Widget(QMainWindow):
         self.favorite_button.setIcon(self.fav_border_icon)
             
 class Browser_GUI:
+    HTML_RENDER = QT_HTML_Renderer()
     def __init__(self, browser=None):
         self.app = QApplication(sys.argv)
         self.browser = browser
@@ -186,8 +188,7 @@ class Browser_GUI:
             Browser_GUI.traverse_dom(child, htmlWidget, layout)
         if root.tag.lower()=="title":
             title = root.content.rstrip()
-            htmlWidget.setWindowTitle(title)
-            htmlWidget.title = title
+            Browser_GUI.HTML_RENDER.set_page_title(title, htmlWidget)
         if root.parse_state==IN_BODY:
             tag = root.tag.lower()
             content = root.content
