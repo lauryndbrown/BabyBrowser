@@ -29,11 +29,7 @@ class Html_Tokenizer:
         tag = Tag(tag)
         tag.parse_state = self.current_state 
         if attrs:
-            print("-------------------\n")
-            print(tag, attrs)
             self.p_opentag_attrs(tag, attrs)
-            print(tag.attrs)
-            print("-------------------\n")
         self.dom.add_child(tag) 
     def handle_closetag(self, tag):
         print("Found end tag:", tag)
@@ -47,7 +43,6 @@ class Html_Tokenizer:
         self.set_opentag_state(tag)
         return tag, attrs, len(match.group(0))
     def p_opentag_attrs(self, tag, attrs):
-        print(attrs)
         for match in re.finditer(t_ATTRIBUTES, attrs):
             attr_name = match.group("attr_name")
             attr_value = match.group("attr_value")
@@ -84,7 +79,6 @@ class Html_Tokenizer:
             tag, attrs, tag_len = self.p_opentag(opentag)
             self.handle_opentag(tag, attrs)
             add_to_index = tag_len
-            print("Add to Index:", add_to_index)
         elif closetag:
             tag, attrs, tag_len = self.p_closetag(closetag)
             self.handle_closetag(tag)
@@ -99,7 +93,6 @@ class Html_Tokenizer:
         return add_to_index+index
 if __name__=="__main__":
     html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n</body>\n</html>"
-    print(html_str)
     tokenizer = Html_Tokenizer()
     tokenizer.tokenize(html_str) 
     print(tokenizer.dom)
