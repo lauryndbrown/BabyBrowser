@@ -111,6 +111,7 @@ class Browser_Main_Widget(QMainWindow):
         #Menu Bar
         mainMenu = self.menuBar()
         self.favMenu = mainMenu.addMenu('Bookmarks')
+        self.favMenu.setStyleSheet("QMenu { menu-scrollable: 1; }")
         print(self.browser.bookmarks)
         for bookmark in self.browser.bookmarks:
             action = QAction(bookmark, self)
