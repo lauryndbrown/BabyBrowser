@@ -16,20 +16,24 @@ class QT_HTML_Renderer:
     def render_tag(self, element):
         tag = element.tag.lower()
         if tag in QT_HTML_Renderer.HEADERS:
-            return self.render_header(tag, element)
-    def render_header(self, tag, element):
+            return self.render_text(tag, element)
+        else:
+            return self.render_text(tag, element)
+    def render_text(self, tag, element):
         text = QLabel(element.content)
-        prop_dict = element.css.get_set_properties()
-        font = QFont()
-        for key in prop_dict:
-            if key == Font.p_FONT_WEIGHT:
-                weight = prop_dict[key]
-                self.set_font_weight(font, weight)
-            if key == Font.p_FONT_SIZE:
-                size = prop_dict[key]
-                print(size)
-                self.set_font_point_size(font, size)
-        text.setFont(font)
+        css = element.css
+        if css:
+            prop_dict = css.get_set_properties()
+            font = QFont()
+            for key in prop_dict:
+                if key == Font.p_FONT_WEIGHT:
+                    weight = prop_dict[key]
+                    self.set_font_weight(font, weight)
+                if key == Font.p_FONT_SIZE:
+                    size = prop_dict[key]
+                    print(size)
+                    self.set_font_point_size(font, size)
+            text.setFont(font)
         return text
 
     def set_font_weight(self, font, weight):
