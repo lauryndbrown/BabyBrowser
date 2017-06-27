@@ -21,6 +21,8 @@ class QT_HTML_Renderer:
             return self.render_text(tag, element)
     def render_text(self, tag, element):
         text = QLabel(element.content)
+        #text.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        text.setWordWrap(True)
         css = element.css
         if css:
             prop_dict = css.get_set_properties()
