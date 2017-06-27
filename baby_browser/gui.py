@@ -25,6 +25,21 @@ class Browser_Widget(QWidget):
         self.title = None
         #self.layout = QVBoxLayout(self)
         #self.setLayout(self.layout)
+
+        #Scoll Area Properites
+        scrollArea = QScrollArea()
+        scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scrollArea.setWidgetResizable(True)
+        self.widget = QWidget()
+        self.widget.setLayout(QVBoxLayout(self))
+        scrollArea.setWidget(self.widget)
+
+        #Scroll Area Layout
+        scroll_layout = QVBoxLayout(self)
+        scroll_layout.addWidget(scrollArea)
+        self.setLayout(scroll_layout)
+        scroll_layout.setSizeConstraint(QLayout.SetMinimumSize)
+        scroll_layout.setAlignment(Qt.AlignTop)
     def center(self):
         geometry = self.frameGeometry()
         center_point = QDesktopWidget().availableGeometry().center()
@@ -117,6 +132,13 @@ class Browser_Main_Widget(QMainWindow):
     def addTab(self, tabName, widget):
         self.tabBar.addTab(widget, tabName)
         self.tabBar.setCurrentWidget(widget)
+        #scroll = QScrollArea()
+        #scroll.setWidget(widget)
+        #scroll.setWidgetResizable(True)
+        #scroll.setFixedHeight(400)
+        #scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        #layout = QVBoxLayout(self.tabBar)
+        #layout.addWidget(scroll)
     def fetch_url(self, url=None):
         if not url:
             url = self.urlBar.text()
@@ -182,18 +204,19 @@ class Browser_GUI:
         self.widget.show()
         sys.exit(self.app.exec_())
     def render_dom(dom, htmlWidget):
-        layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignTop)
-        htmlWidget.setLayout(layout)
+       
+
+            
+            
+            
+            
+            
         #add scrollarea
-        htmlWidget.scrollArea = QScrollArea(htmlWidget)
-        htmlWidget.scrollArea.setWidgetResizable(True)
-        layout.addWidget(htmlWidget.scrollArea)
-        scroll_layout = QVBoxLayout()
-        #scroll_layout.setVerticalPolicy(QSizePolicy.Minimum)
-        scroll_layout.setSizeConstraint(QLayout.SetMinimumSize)
-        htmlWidget.scrollArea.setLayout(scroll_layout)
-        Browser_GUI.traverse_dom(dom.root, htmlWidget, scroll_layout)
+        #scrollArea = QScrollArea(htmlWidget)
+        #htmlWidget.setMaximumHeight(1000)
+        #layout.addWidget(scrollArea)
+        #htmlWidget.setLayout(scroll_layout)
+        Browser_GUI.traverse_dom(dom.root, htmlWidget, htmlWidget.widget.layout())
     def traverse_dom(root, htmlWidget, layout):
         for child in root.children:
             Browser_GUI.traverse_dom(child, htmlWidget, layout)
