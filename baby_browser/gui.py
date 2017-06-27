@@ -1,4 +1,5 @@
 import sys
+import functools
 import os
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
@@ -120,8 +121,9 @@ class Browser_Main_Widget(QMainWindow):
         self.favMenu.setStyleSheet("QMenu { menu-scrollable: 1; }")
         print(self.browser.bookmarks)
         for bookmark in self.browser.bookmarks:
+            print(bookmark)
             action = self.create_bookmark(bookmark.url, bookmark.title)
-            action.triggered.connect(lambda: self.fetch_url(bookmark.url))
+            action.triggered.connect(functools.partial(self.fetch_url, bookmark.url))
             self.favMenu.addAction(action)
         
         self.addDefaultTab()
@@ -146,7 +148,7 @@ class Browser_Main_Widget(QMainWindow):
             url = self.urlBar.text()
         else:
             self.urlBar.setText(url)
-        print(url)
+        print("URL:", url)
         if self.browser:
             if self.browser.has_bookmark(url):
                 self.favorite_button.setIcon(self.fav_full_icon)
