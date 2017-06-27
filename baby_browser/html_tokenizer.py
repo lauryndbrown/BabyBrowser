@@ -35,8 +35,8 @@ class Html_Tokenizer:
         print("Found end tag:", tag)
         self.dom.close_child() 
     def handle_data(self, data):
-        self.dom.add_content(data)
         print("Found data:", data)
+        self.dom.add_content(data)
     def p_opentag(self, match):
         tag = match.group("tag")
         attrs = match.group("attrs")

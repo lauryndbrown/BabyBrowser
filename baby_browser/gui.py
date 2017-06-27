@@ -72,6 +72,9 @@ class Browser_Main_Widget(QMainWindow):
         self.tabBar.setCornerWidget(new_tab_button)
         new_tab_button.clicked.connect(self.addDefaultTab)
 
+        #status bar
+        self.statusBar = QStatusBar()
+        self.setStatusBar(self.statusBar)
 
         #toolbar
         toolbar = self.addToolBar("Tool Bar")
@@ -114,8 +117,8 @@ class Browser_Main_Widget(QMainWindow):
         self.favMenu.setStyleSheet("QMenu { menu-scrollable: 1; }")
         print(self.browser.bookmarks)
         for bookmark in self.browser.bookmarks:
-            action = QAction(bookmark, self)
-            action.triggered.connect(lambda: self.fetch_url(bookmark))
+            action = QAction(bookmark.url, self)
+            action.triggered.connect(lambda: self.fetch_url(bookmark.url))
             self.favMenu.addAction(action)
 
 
@@ -143,18 +146,21 @@ class Browser_Main_Widget(QMainWindow):
             self.urlBar.setText(url)
         print(url)
         if self.browser:
-            if url in self.browser.bookmarks:
+            if self.browser.has_bookmark(url):
                 self.favorite_button.setIcon(self.fav_full_icon)
             else:
                 self.favorite_button.setIcon(self.fav_border_icon)
 
+            self.statusBar.showMessage("Fetching Url")
             dom = self.browser.fetch_url(url)
             index = self.tabBar.currentIndex()
             self.removeTab(index, True)
 
             widget = Browser_Widget()
+            self.statusBar.showMessage("Rendering Webpage")
             Browser_GUI.render_dom(dom, widget)
             self.addTab(widget.title, widget)
+            self.statusBar.showMessage("")
             print("DONE------------------------")
             print("has title:", widget.title)
             print(dom)
@@ -167,24 +173,34 @@ class Browser_Main_Widget(QMainWindow):
             url = self.browser.go_forward()
             self.fetch_url(url)
     def toggle_bookmark(self):
-        if self.browser.current_url not in self.browser.bookmarks:
+        if not self.browser.has_bookmark(self.browser.current_url):
             self.add_bookmark()
         else:
             self.remove_bookmark()
     def add_bookmark(self):
         url = self.browser.current_url
-        self.browser.add_bookmark(url)
+        tab_index = self.tabBar.currentIndex()
+        title = self.tabBar.tabText(tab_index)
+        print("-----!!! Title:", title) 
+        self.browser.add_bookmark(url, title)
         self.favorite_button.setIcon(self.fav_full_icon)
-        action = QAction(url, self)
+        if title:
+            action = QAction(title, self)
+            action.setStatusTip(title+"\n"+url)
+        else:
+            action = QAction(url, self)
+            action.setStatusTip(url)
         action.triggered.connect(lambda: self.fetch_url(url))
         self.favMenu.addAction(action)
     def remove_bookmark(self):
         url = self.browser.current_url
+        tab_index = self.tabBar.currentIndex()
+        title = self.tabBar.tabText(tab_index)
         self.browser.remove_bookmark(url)
         self.favorite_button.setIcon(self.fav_border_icon)
         for action in self.favMenu.actions():
             print("Action:", action.text())
-            if action.text()==url:
+            if action.text()==url or action.text()==title:
                 self.favMenu.removeAction(action)
                 break
     def closeEvent(self, event):

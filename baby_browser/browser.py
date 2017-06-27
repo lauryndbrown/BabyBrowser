@@ -2,6 +2,8 @@ from baby_browser.gui import *
 from baby_browser.html_tokenizer import * 
 from baby_browser.css_tokenizer import * 
 from baby_browser.networking import * 
+import pickle
+import os
 class BabyBrowser:
     BOOKMARK_FILE = os.path.join("baby_browser", "bookmarks.txt")
     DEFAULT_CSS = os.path.join("baby_browser", "browser.css")
@@ -13,8 +15,11 @@ class BabyBrowser:
         self.previous_pages = []
         self.forward_pages = []
         self.current_url = None
-        with open(BabyBrowser.BOOKMARK_FILE, 'r') as bookmarks_file:
-            self.bookmarks = list(bookmarks_file)
+        if os.stat(BabyBrowser.BOOKMARK_FILE).st_size!=0:
+            with open(BabyBrowser.BOOKMARK_FILE, 'rb') as bookmarks_file:
+                self.bookmarks = pickle.load(bookmarks_file)
+        else:
+            self.bookmarks = []
         with open(BabyBrowser.DEFAULT_CSS, 'r') as default_css:
             self.default_css = "".join(list(default_css))
     def fetch_url(self, url):
@@ -40,16 +45,33 @@ class BabyBrowser:
         page_url = self.forward_pages.pop()
         self.previous_pages.append(page_url)
         return page_url
-    def add_bookmark(self, url):
-        if url not in self.bookmarks:
-            self.bookmarks.append(url)
+    def has_bookmark(self, url):
+        for bookmark in self.bookmarks:
+            if bookmark.url == url:
+                return True
+        return False
+    def index_of_bookmark(self, url):
+        for index in range(len(self.bookmarks)):
+            if self.bookmarks[index].url == url:
+                return index
+        return None
+    
+    def add_bookmark(self, url, title=None, icon=None):
+        if not self.has_bookmark(url):
+            self.bookmarks.append(MenuWebPage(url, title))
     def remove_bookmark(self, url):
-        if url in self.bookmarks:
-            self.bookmarks.remove(url)
+        if self.has_bookmark(url):
+            index = self.index_of_bookmark(url)
+            self.bookmarks.pop(index)
+            print("Index:{} Bookmarks:{}".format(index, self.bookmarks))
     def on_close(self):
-        with open(BabyBrowser.BOOKMARK_FILE, 'w') as bookmarks_file:
-            for url in self.bookmarks:
-                bookmarks_file.write(url)
+        with open(BabyBrowser.BOOKMARK_FILE, 'wb') as bookmarks_file:
+            pickle.dump(self.bookmarks, bookmarks_file, protocol=pickle.HIGHEST_PROTOCOL)
+class MenuWebPage:
+    def __init__(self, url, title=None, icon=None):
+        self.url = url
+        self.icon = icon
+        self.title = title
 
     
 
