@@ -25,7 +25,6 @@ class Browser_Widget(QWidget):
         self.title = None
         #self.layout = QVBoxLayout(self)
         #self.setLayout(self.layout)
-
     def center(self):
         geometry = self.frameGeometry()
         center_point = QDesktopWidget().availableGeometry().center()
@@ -95,7 +94,11 @@ class Browser_Main_Widget(QMainWindow):
         toolbar.addSeparator()
         toolbar.addWidget(submit_button)
 
+
+        
         self.addDefaultTab()
+        
+        #ScrollArea
         #Add html widget
         #layout = QVBoxLayout() 
         #layout.addWidget(self.htmlWidget)
@@ -182,7 +185,15 @@ class Browser_GUI:
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignTop)
         htmlWidget.setLayout(layout)
-        Browser_GUI.traverse_dom(dom.root, htmlWidget, layout)
+        #add scrollarea
+        htmlWidget.scrollArea = QScrollArea(htmlWidget)
+        htmlWidget.scrollArea.setWidgetResizable(True)
+        layout.addWidget(htmlWidget.scrollArea)
+        scroll_layout = QVBoxLayout()
+        #scroll_layout.setVerticalPolicy(QSizePolicy.Minimum)
+        scroll_layout.setSizeConstraint(QLayout.SetMinimumSize)
+        htmlWidget.scrollArea.setLayout(scroll_layout)
+        Browser_GUI.traverse_dom(dom.root, htmlWidget, scroll_layout)
     def traverse_dom(root, htmlWidget, layout):
         for child in root.children:
             Browser_GUI.traverse_dom(child, htmlWidget, layout)
