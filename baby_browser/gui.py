@@ -23,12 +23,9 @@ class Browser_Widget(QWidget):
         self.setPalette(palette)
 
         self.title = None
-        #self.layout = QVBoxLayout(self)
-        #self.setLayout(self.layout)
 
         #Scoll Area Properites
         scrollArea = QScrollArea()
-        scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         scrollArea.setWidgetResizable(True)
         self.widget = QWidget()
         self.widget.setLayout(QVBoxLayout(self))
@@ -204,18 +201,6 @@ class Browser_GUI:
         self.widget.show()
         sys.exit(self.app.exec_())
     def render_dom(dom, htmlWidget):
-       
-
-            
-            
-            
-            
-            
-        #add scrollarea
-        #scrollArea = QScrollArea(htmlWidget)
-        #htmlWidget.setMaximumHeight(1000)
-        #layout.addWidget(scrollArea)
-        #htmlWidget.setLayout(scroll_layout)
         Browser_GUI.traverse_dom(dom.root, htmlWidget, htmlWidget.widget.layout())
     def traverse_dom(root, htmlWidget, layout):
         for child in root.children:
