@@ -18,10 +18,6 @@ class Browser_Widget(QWidget):
         self.initUI()
     def initUI(self):
         #color background white
-        self.setAutoFillBackground(True)
-        palette = self.palette()
-        palette.setColor(self.backgroundRole(), Qt.white)
-        self.setPalette(palette)
 
         self.title = None
 
@@ -119,9 +115,7 @@ class Browser_Main_Widget(QMainWindow):
         mainMenu = self.menuBar()
         self.favMenu = mainMenu.addMenu('Bookmarks')
         self.favMenu.setStyleSheet("QMenu { menu-scrollable: 1; }")
-        print(self.browser.bookmarks)
         for bookmark in self.browser.bookmarks:
-            print(bookmark)
             action = self.create_bookmark(bookmark.url, bookmark.title)
             action.triggered.connect(functools.partial(self.fetch_url, bookmark.url))
             self.favMenu.addAction(action)
@@ -165,8 +159,6 @@ class Browser_Main_Widget(QMainWindow):
             Browser_GUI.render_dom(dom, widget)
             self.addTab(widget.title, widget)
             self.statusBar.showMessage("")
-            print("DONE------------------------")
-            print("has title:", widget.title)
             print(dom)
     def go_back(self):
         if self.browser:
@@ -185,7 +177,6 @@ class Browser_Main_Widget(QMainWindow):
         url = self.browser.current_url
         tab_index = self.tabBar.currentIndex()
         title = self.tabBar.tabText(tab_index)
-        print("-----!!! Title:", title) 
         self.browser.add_bookmark(url, title)
         self.favorite_button.setIcon(self.fav_full_icon)
         action = self.create_bookmark(url, title)
@@ -250,6 +241,8 @@ class Browser_GUI:
         if root.tag.lower()=="title":
             title = root.content.rstrip()
             Browser_GUI.HTML_RENDER.set_page_title(title, htmlWidget)
+        if root.tag.lower()=="body":
+            Browser_GUI.HTML_RENDER.render_body(root, htmlWidget)
         if root.parse_state==IN_BODY:
             Browser_GUI.HTML_RENDER.render_in_body_content(root, layout)
         

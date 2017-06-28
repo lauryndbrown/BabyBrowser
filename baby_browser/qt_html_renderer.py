@@ -10,15 +10,35 @@ class QT_HTML_Renderer:
     def set_page_title(self, title, page):
         page.setWindowTitle(title)
         page.title = title
+    def render_body(self, element, htmlWidget):
+        widget = htmlWidget.widget
+        self.render_box_styles(element, widget)
     def render_in_body_content(self, element, layout):
         widget = self.render_tag(element)
         layout.addWidget(widget)
     def render_tag(self, element):
         tag = element.tag.lower()
+        widget = None
         if tag in QT_HTML_Renderer.HEADERS:
-            return self.render_text(tag, element)
+            widget = self.render_text(tag, element)
         else:
-            return self.render_text(tag, element)
+            widget =  self.render_text(tag, element)
+        self.render_box_styles(element, widget)
+        return widget
+    def render_box_styles(self, element, widget):
+        css = element.css
+        if css:
+            prop_dict = css.box_style.get_set_properties()
+            for key in prop_dict:
+                if key==BoxStyle.p_BACKGROUND_COLOR:
+                    color = prop_dict[key]
+                    self.setBackgroundColor(widget, color)
+    def setBackgroundColor(self, widget, color):
+        #widget.setStyleSheet("QWidget {background-color:"+color+";}")
+        style = "background-color:"+color+";"
+        widget.setStyleSheet(style)
+        print("hhhhhhhhhhhhhhhhhhhhh")
+        print("color:", color, "sytle:", style)
     def render_text(self, tag, element):
         text = QLabel(element.content)
         text.setWordWrap(True)

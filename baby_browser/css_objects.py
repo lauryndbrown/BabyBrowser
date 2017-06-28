@@ -102,9 +102,21 @@ class BoxStyle(CSS_Style):
     NONE = "none"
     HIDDEN = "hidden"
     VISIBLE = "visible"
+    #Properties
+    p_BACKGROUND_COLOR = "background-color"
+    p_COLOR = "color"
+    p_WIDTH = "width"
+    p_HEIGHT = "height"
+    p_DISPLAY = "display"
+    p_VISIBILITY = "visibility"
+    p_MAX_WIDTH = "max_width"
+    p_MAX_HEIGHT = "max_height"
+    p_MIN_WIDTH = "min_width"
+    p_MIN_HEIGHT = "min_height"
+
     def __init__(self, display):
         super().__init__()
-        self.properties = {"display":display, "height":None, "width":None, "background-color":None, "color":None, "visibility":BoxStyle.VISIBLE, "min_height":None, "min_width":None, "max_height":None, "max_width":None}
+        self.properties = {BoxStyle.p_DISPLAY:display, BoxStyle.p_HEIGHT:None, BoxStyle.p_WIDTH:None,  BoxStyle.p_BACKGROUND_COLOR:None,  BoxStyle.p_COLOR:None,  BoxStyle.p_VISIBILITY:BoxStyle.VISIBLE,  BoxStyle.p_MIN_HEIGHT:None,   BoxStyle.p_MIN_WIDTH:None,  BoxStyle.p_MAX_HEIGHT:None,   BoxStyle.p_MAX_WIDTH:None}
         #self.margin = BoxStyleAttribute()
         #self.padding = BoxStyleAttribute()
         #self.border = Border()

@@ -55,7 +55,6 @@ class BabyBrowser:
             if self.bookmarks[index].url == url:
                 return index
         return None
-    
     def add_bookmark(self, url, title=None, icon=None):
         if not self.has_bookmark(url):
             self.bookmarks.append(MenuWebPage(url, title))
