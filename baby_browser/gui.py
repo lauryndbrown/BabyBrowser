@@ -81,6 +81,7 @@ class Browser_Main_Widget(QMainWindow):
         toolbar.setMovable(False)
         #Url Bar
         self.urlBar = QLineEdit()
+        self.urlBar.returnPressed.connect(self.fetch_url)
         submit_button = QPushButton()
         submit_button.setIcon(QIcon(os.path.join("baby_browser", "images", "search.png")))
         submit_button.clicked.connect(self.fetch_url)
