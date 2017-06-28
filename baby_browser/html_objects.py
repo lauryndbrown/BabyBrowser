@@ -11,10 +11,15 @@ class Html_Object:
         self.parse_state = None
         self.css = css
 class Tag(Html_Object):
+    SELF_CLOSING = ['br','img', 'hr']
     def __init__(self, tag, content=None, parent=None, children=None):
         super().__init__(parent, children)
         self.tag = tag
         self.content = content
+        if tag in Tag.SELF_CLOSING:
+            self.is_self_closing = True
+        else:
+            self.is_self_closing = False
     def add_attr(self, attr_name, attr_value):
         if attr_name.lower()==CLASS:
             self.attrs[CLASS] = attr_value.split()
@@ -76,7 +81,6 @@ class DOM:
             for child in root.children:
                 child_results = self._find_children_helper(child, child_name, find_by, results)
             return results
-
     def __str__(self):
         return self.str_traverse(self.root, 0)
     def str_css(self):

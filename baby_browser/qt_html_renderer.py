@@ -6,6 +6,7 @@ from baby_browser.networking import *
 
 class QT_HTML_Renderer:
     HEADERS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    IMG = "img"
     def __init__(self):
         pass
     def set_page_title(self, title, page):
@@ -22,12 +23,18 @@ class QT_HTML_Renderer:
         widget = None
         if tag in QT_HTML_Renderer.HEADERS:
             widget = self.render_text(tag, element)
-        if tag=="img":
+        if tag==QT_HTML_Renderer.IMG:
             widget = self.render_img(element)
+        if tag==QT_HTML_Renderer.HR:
+            widget = self.render_hr(element)
         else:
             widget =  self.render_text(tag, element)
         self.render_box_styles(element, widget)
         return widget
+    def render_hr(self, element):
+        hr = QFrame()
+        hr.setFrameStyle(QFrame.HLine)
+        return hr
     def render_img(self, element):
         element.content = Network.get_image(element.attrs["src"])
         image = QImage()

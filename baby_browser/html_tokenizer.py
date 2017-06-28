@@ -3,12 +3,6 @@ from baby_browser.html_objects import *
 #Tokens
 t_OPENTAG = re.compile("\s*<(?P<tag>\w+)\s*(?P<attrs>[^>]+)?>")
 t_ATTRIBUTES = re.compile("(?P<attr_name>\w+)=\"(?P<attr_value>[^\"]+)\s*")
-#\s*<(?P<tag>\w+)\s*(?P<attrs>[\w\s\"=]+)?>
-#\s*<(?P<tag>\w+)\s*(?:class=["|'](?P<class>\w+)["|'])?\s*(?:id="(?P<id>\w+)")?>
-#\s*(?P<tag>\w+)\s*(?:class="(?P<class>\w+)")?\s*(?:id="(?P<id>\w+)")?
-#\s*(?P<tag>\w+)\s*[(?:class="(?P<class>\w+)"\s*)|(?:id="(?P<id>\w+)"\s*)]{0,2}
-#\s*(?P<tag>\w+)\s*(?:(?P<attr_name>\w+)="(?P<attr_value>\w+)"\s*)*
-#\s*(?P<tag>\w+)\s*(?:(?:class=\"(?P<class_name>\w+)\"\s*)|(?:id=\"(?P<id_name>\w+)\"\s*)){0,2}
 t_CLOSETAG = re.compile("</(\w+)>")
 t_DATA = re.compile("[^<>]+")
 t_WHITESPACE = re.compile("\s+")
@@ -26,13 +20,15 @@ HTML = "html"
 HEAD = "head"
 STYLE = "style"
 class Html_Tokenizer:
-    def handle_opentag(self, tag, attrs):
+    def handle_opentag(self, tag_str, attrs):
         #print("Found start tag:", tag, attrs)
-        tag = Tag(tag)
+        tag = Tag(tag_str)
         tag.parse_state = self.current_state 
         if attrs:
             self.p_opentag_attrs(tag, attrs)
         self.dom.add_child(tag) 
+        if tag.is_self_closing:
+            self.handle_closetag(tag)
     def handle_closetag(self, tag):
         #print("Found end tag:", tag)
         self.dom.close_child() 
