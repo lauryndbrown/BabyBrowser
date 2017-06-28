@@ -21,7 +21,7 @@ HEAD = "head"
 STYLE = "style"
 class Html_Tokenizer:
     def handle_opentag(self, tag_str, attrs):
-        #print("Found start tag:", tag, attrs)
+        print("Found start tag:", tag_str, attrs)
         tag = Tag(tag_str)
         tag.parse_state = self.current_state 
         if attrs:
@@ -30,11 +30,12 @@ class Html_Tokenizer:
         if tag.is_self_closing:
             self.handle_closetag(tag)
     def handle_closetag(self, tag):
-        #print("Found end tag:", tag)
+        print("Found end tag:", tag)
         self.dom.close_child() 
-    def handle_data(self, data):
-        #print("Found data:", data)
-        self.dom.add_content(data)
+    def handle_data(self, display_data, original_data):
+        print("Found data:", display_data)
+        data = Text(display_data, original_data)
+        self.dom.add_text(data)
     def p_opentag(self, match):
         tag = match.group("tag")
         attrs = match.group("attrs")
@@ -85,7 +86,7 @@ class Html_Tokenizer:
             add_to_index = len(whitespace.group(0))
         elif data:
             data_result = self.p_data(data.group(0))
-            self.handle_data(data_result)
+            self.handle_data(data_result, data.group(0))
             add_to_index = len(data.group(0))
         else:
             add_to_index = 1
@@ -99,7 +100,13 @@ class Html_Tokenizer:
         return " ".join(data)
 
 if __name__=="__main__":
-    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n<img src=\"html5.gif\" alt=\"HTML5 Icon\" width=\"128\" height=\"128\">\n</body>\n</html>"
+    import sys
+    import os
+    example_path = os.path.join("baby_browser", "Examples", sys.argv[1]) 
+    html_file = open(example_path, 'r')
+    html_str = "\n".join(list(html_file))
+    html_file.close()
+    #html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n<img src=\"html5.gif\" alt=\"HTML5 Icon\" width=\"128\" height=\"128\">\n</body>\n</html>"
     tokenizer = Html_Tokenizer()
     tokenizer.tokenize(html_str) 
     print(tokenizer.dom)

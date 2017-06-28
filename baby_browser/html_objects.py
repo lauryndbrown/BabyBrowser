@@ -10,6 +10,15 @@ class Html_Object:
         self.attrs = {CLASS:None, ID:None}
         self.parse_state = None
         self.css = css
+class Text(Html_Object):
+    def __init__(self, content, original_text=None, parent=None):
+        super().__init__(parent, None)
+        self.content = content
+        self.original_text = original_text
+    def __str__(self):
+        return self.content
+    def __repr__(self):
+        return self.__str__()
 class Tag(Html_Object):
     SELF_CLOSING = ['br','img', 'hr']
     def __init__(self, tag, content=None, parent=None, children=None):
@@ -39,6 +48,13 @@ class DOM:
     def __init__(self, root=None):
         self.root = root
         self.current_level = None
+    def add_text(self, text_object):
+        if self.root:
+           self.current_level.children.append(text_object)
+           text_object.parent = self.current_level
+        else:
+            raise ValueError("text is the only element in html given")
+
     def add_child(self, html_object):
         if self.root:
            self.current_level.children.append(html_object)
@@ -87,9 +103,7 @@ class DOM:
         return self.str_traverse(self.root, 0, True)
     def str_traverse(self, root, level, css=False):
         lst_root = "  "*level+str(root)
-        if root.content and not css:
-            lst_root += "\n"+("  "*(level+1))+str(root.content)
-        elif root.css and css:
+        if root.css and css:
             lst_root += "\n"+("  "*(level+1))+str(root.css)
         for child in root.children:
             lst_root+= "\n"+self.str_traverse(child, level+1, css)
