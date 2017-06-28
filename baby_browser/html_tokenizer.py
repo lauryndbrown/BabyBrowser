@@ -1,8 +1,9 @@
 import re
 from baby_browser.html_objects import * 
 #Tokens
-t_OPENTAG = re.compile("\s*<(?P<tag>\w+)\s*(?P<attrs>[\w\s\"=]+)?>")
-t_ATTRIBUTES = re.compile("(?P<attr_name>\w+)=\"(?P<attr_value>[\w\s\-_]+)\"\s*")
+t_OPENTAG = re.compile("\s*<(?P<tag>\w+)\s*(?P<attrs>[^>]+)?>")
+t_ATTRIBUTES = re.compile("(?P<attr_name>\w+)=\"(?P<attr_value>[^\"]+)\s*")
+#\s*<(?P<tag>\w+)\s*(?P<attrs>[\w\s\"=]+)?>
 #\s*<(?P<tag>\w+)\s*(?:class=["|'](?P<class>\w+)["|'])?\s*(?:id="(?P<id>\w+)")?>
 #\s*(?P<tag>\w+)\s*(?:class="(?P<class>\w+)")?\s*(?:id="(?P<id>\w+)")?
 #\s*(?P<tag>\w+)\s*[(?:class="(?P<class>\w+)"\s*)|(?:id="(?P<id>\w+)"\s*)]{0,2}
@@ -92,7 +93,7 @@ class Html_Tokenizer:
             add_to_index = 1
         return add_to_index+index
 if __name__=="__main__":
-    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n</body>\n</html>"
+    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n<img src=\"html5.gif\" alt=\"HTML5 Icon\" width=\"128\" height=\"128\">\n</body>\n</html>"
     tokenizer = Html_Tokenizer()
     tokenizer.tokenize(html_str) 
     print(tokenizer.dom)

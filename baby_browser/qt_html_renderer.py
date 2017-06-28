@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from baby_browser.css_objects import *
+from baby_browser.networking import *
 
 class QT_HTML_Renderer:
     HEADERS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
@@ -21,10 +22,20 @@ class QT_HTML_Renderer:
         widget = None
         if tag in QT_HTML_Renderer.HEADERS:
             widget = self.render_text(tag, element)
+        if tag=="img":
+            widget = self.render_img(element)
         else:
             widget =  self.render_text(tag, element)
         self.render_box_styles(element, widget)
         return widget
+    def render_img(self, element):
+        element.content = Network.get_image(element.attrs["src"])
+        image = QImage()
+        image.loadFromData(element.content)
+        label = QLabel()
+        label.setPixmap(QPixmap(image))
+        return label 
+
     def render_box_styles(self, element, widget):
         css = element.css
         if css:

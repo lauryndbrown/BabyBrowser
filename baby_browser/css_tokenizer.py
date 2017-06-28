@@ -69,7 +69,8 @@ class CSS_Tokenizer:
 if __name__=="__main__":
     from baby_browser.html_tokenizer import *
    # html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<h1 class=\"hello\">Hi</h1>\n<h2 class=\"hello goodbye\">Yah!</h2>\n</body>\n</html>"
-    html_str = "".join(list(open(os.path.join("baby_browser", "Examples", "headers2.html"))))
+    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n<img src=\"html5.gif\" alt=\"HTML5 Icon\" width=\"128\" height=\"128\">\n</body>\n</html>"
+    #html_str = "".join(list(open(os.path.join("baby_browser", "Examples", "headers2.html"))))
     html_tokenizer = Html_Tokenizer()
     html_tokenizer.tokenize(html_str)
     print(html_tokenizer.dom)
