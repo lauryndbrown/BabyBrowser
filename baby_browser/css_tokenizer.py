@@ -18,13 +18,13 @@ class CSS_Tokenizer:
         for css in re.finditer(t_RULE, css_str):
             self.parse(css, dom) 
     def parse(self, css, dom):
-        print(css)
+        #print(css)
         if css:
             selectors = css.group('selector')
             declarations = css.group('declarations')
             for match in re.finditer(t_SELECTOR_GROUPS, selectors):
                 elements = self.get_dom_elements(match.group("selector"), dom)
-                print(elements)
+                #print(elements)
                 for element in elements:
                     self.add_render_element(element, declarations)
     def add_render_element(self, dom_element, declarations):
@@ -33,7 +33,7 @@ class CSS_Tokenizer:
                     render_object = dom_element.css
                 else:
                     render_object = RenderObject(BoxStyle.BLOCK)
-                print(dom_element.tag)
+                #print(dom_element.tag)
                 for match in re.finditer(t_DECLARATIONS, declarations):
                     css_property =  match.group("property")
                     css_value =  match.group("value")
@@ -60,10 +60,10 @@ class CSS_Tokenizer:
                     num_unit = re.match(t_NUM_UNIT, css_value)
                     if num_unit:
                         css_unit = CSSUnit(num_unit.group("value"), num_unit.group("unit")) 
-                        print("   Adding:",css_property,css_unit) 
+                        #print("   Adding:",css_property,css_unit) 
                         prop.properties[css_property] = css_unit
                     else:
-                        print("   Adding:",css_property,css_value) 
+                        #print("   Adding:",css_property,css_value) 
                         prop.properties[css_property] = css_value
                     
 if __name__=="__main__":

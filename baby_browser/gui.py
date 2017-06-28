@@ -137,12 +137,12 @@ class Browser_Main_Widget(QMainWindow):
         self.tabBar.setCurrentWidget(widget)
         index = self.tabBar.currentIndex()
         self.tabBar.setTabIcon(index, self.page_icon)
-    def fetch_url(self, url=None):
+    def fetch_url(self, url=None, direction=None):
         if not url:
             url = self.urlBar.text()
         else:
+            print("URL:", url)
             self.urlBar.setText(url)
-        print("URL:", url)
         if self.browser:
             if self.browser.has_bookmark(url):
                 self.favorite_button.setIcon(self.fav_full_icon)
@@ -150,7 +150,10 @@ class Browser_Main_Widget(QMainWindow):
                 self.favorite_button.setIcon(self.fav_border_icon)
 
             self.statusBar.showMessage("Fetching Url")
-            dom = self.browser.fetch_url(url)
+            if direction:
+                dom = self.browser.fetch_url(url, True)
+            else:
+                dom = self.browser.fetch_url(url)
             index = self.tabBar.currentIndex()
             self.removeTab(index, True)
 
@@ -159,14 +162,13 @@ class Browser_Main_Widget(QMainWindow):
             Browser_GUI.render_dom(dom, widget)
             self.addTab(widget.title, widget)
             self.statusBar.showMessage("")
-            print(dom)
     def go_back(self):
-        if self.browser:
-            url = self.browser.go_back()
-            self.fetch_url(url)
+        url = self.browser.go_back()
+        if url:
+            self.fetch_url(url, True)
     def go_forward(self):
-        if self.browser:
-            url = self.browser.go_forward()
+        url = self.browser.go_forward()
+        if url:
             self.fetch_url(url)
     def toggle_bookmark(self):
         if not self.browser.has_bookmark(self.browser.current_url):

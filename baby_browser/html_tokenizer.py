@@ -27,17 +27,17 @@ HEAD = "head"
 STYLE = "style"
 class Html_Tokenizer:
     def handle_opentag(self, tag, attrs):
-        print("Found start tag:", tag, attrs)
+        #print("Found start tag:", tag, attrs)
         tag = Tag(tag)
         tag.parse_state = self.current_state 
         if attrs:
             self.p_opentag_attrs(tag, attrs)
         self.dom.add_child(tag) 
     def handle_closetag(self, tag):
-        print("Found end tag:", tag)
+        #print("Found end tag:", tag)
         self.dom.close_child() 
     def handle_data(self, data):
-        print("Found data:", data)
+        #print("Found data:", data)
         self.dom.add_content(data)
     def p_opentag(self, match):
         tag = match.group("tag")

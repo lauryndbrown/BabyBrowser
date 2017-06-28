@@ -22,10 +22,10 @@ class BabyBrowser:
             self.bookmarks = []
         with open(BabyBrowser.DEFAULT_CSS, 'r') as default_css:
             self.default_css = "".join(list(default_css))
-    def fetch_url(self, url):
+    def fetch_url(self, url, direction=None):
         response = self.network_get(url)
-        if self.current_url!=url:
-            self.previous_pages.append(url)
+        if not direction and self.current_url and self.current_url!=url:
+            self.previous_pages.append(self.current_url)
         self.current_url = url
         return self.tokenize_html(response)
     def network_get(self, url):
@@ -44,12 +44,17 @@ class BabyBrowser:
     def show_gui(self):
         self.gui = Browser_GUI(self) 
     def go_back(self):
+        if not self.previous_pages:
+            return None
         page_url = self.previous_pages.pop()
-        self.forward_pages.append(page_url)
+        self.forward_pages.append(self.current_url)
+        print("\n------------------\nPrev:{}\nForward:{}\nGOTO:{}\n-----------------\n".format(self.previous_pages, self.forward_pages, page_url))
         return page_url
     def go_forward(self):
+        if not self.forward_pages:
+            return None
         page_url = self.forward_pages.pop()
-        self.previous_pages.append(page_url)
+        self.previous_pages.append(self.current_url)
         return page_url
     def has_bookmark(self, url):
         for bookmark in self.bookmarks:
@@ -68,7 +73,6 @@ class BabyBrowser:
         if self.has_bookmark(url):
             index = self.index_of_bookmark(url)
             self.bookmarks.pop(index)
-            print("Index:{} Bookmarks:{}".format(index, self.bookmarks))
     def on_close(self):
         with open(BabyBrowser.BOOKMARK_FILE, 'wb') as bookmarks_file:
             pickle.dump(self.bookmarks, bookmarks_file, protocol=pickle.HIGHEST_PROTOCOL)

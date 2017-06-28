@@ -51,7 +51,6 @@ class QT_HTML_Renderer:
             if box_style:
                 widget.setStyleSheet("".join(box_style))
     def setBackgroundColor(self, widget, color):
-        #widget.setStyleSheet("QWidget {background-color:"+color+";}")
         return "background-color:"+color+";"
     def setColor(self, widget, color):
         return "color:"+color+";"
@@ -69,7 +68,6 @@ class QT_HTML_Renderer:
                     self.set_font_weight(font, weight)
                 if key == Font.p_FONT_SIZE:
                     size = prop_dict[key]
-                    print(size)
                     self.set_font_point_size(font, size)
             text.setFont(font)
         return text
