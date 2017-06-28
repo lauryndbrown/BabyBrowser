@@ -37,8 +37,6 @@ class QT_HTML_Renderer:
         #widget.setStyleSheet("QWidget {background-color:"+color+";}")
         style = "background-color:"+color+";"
         widget.setStyleSheet(style)
-        print("hhhhhhhhhhhhhhhhhhhhh")
-        print("color:", color, "sytle:", style)
     def render_text(self, tag, element):
         text = QLabel(element.content)
         text.setWordWrap(True)
