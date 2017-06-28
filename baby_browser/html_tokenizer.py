@@ -24,6 +24,7 @@ AFTER_AFTER_BODY = "after after body"
 BODY = "body"
 HTML = "html"
 HEAD = "head"
+STYLE = "style"
 class Html_Tokenizer:
     def handle_opentag(self, tag, attrs):
         print("Found start tag:", tag, attrs)
