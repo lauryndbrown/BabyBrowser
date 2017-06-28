@@ -32,8 +32,16 @@ class BabyBrowser:
         return self.networking.get(url) 
     def tokenize_html(self, html):
         self.html_tokenizer.tokenize(html)
-        
-        self.css_tokenizer.tokenize(self.default_css, self.html_tokenizer.dom) #Default Browser Styles
+        dom = self.html_tokenizer.dom
+        #Default Browser Styles
+        self.css_tokenizer.tokenize(self.default_css, dom) 
+        #Style in Heading
+        style_elements = dom.find_children_by_tag("style")
+        print("------------------------")
+        print(style_elements)
+        for element in style_elements:
+            self.css_tokenizer.tokenize(element.content, dom) 
+
         return self.html_tokenizer.dom
     def show_gui(self):
         self.gui = Browser_GUI(self) 
