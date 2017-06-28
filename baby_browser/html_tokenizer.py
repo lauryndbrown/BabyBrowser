@@ -84,11 +84,20 @@ class Html_Tokenizer:
         elif whitespace:
             add_to_index = len(whitespace.group(0))
         elif data:
-            self.handle_data(data.group(0))
+            data_result = self.p_data(data.group(0))
+            self.handle_data(data_result)
             add_to_index = len(data.group(0))
         else:
             add_to_index = 1
         return add_to_index+index
+    def p_data(self, data):
+        data = self.remove_excess_whitespace(data)
+        return data
+    def remove_excess_whitespace(self, data):
+        #split the data and remove empty strings
+        data = filter(lambda x: x, re.split("\s", data))
+        return " ".join(data)
+
 if __name__=="__main__":
     html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n<img src=\"html5.gif\" alt=\"HTML5 Icon\" width=\"128\" height=\"128\">\n</body>\n</html>"
     tokenizer = Html_Tokenizer()
