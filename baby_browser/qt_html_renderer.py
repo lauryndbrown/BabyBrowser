@@ -38,16 +38,23 @@ class QT_HTML_Renderer:
 
     def render_box_styles(self, element, widget):
         css = element.css
+        box_style = []
         if css:
             prop_dict = css.box_style.get_set_properties()
             for key in prop_dict:
                 if key==BoxStyle.p_BACKGROUND_COLOR:
                     color = prop_dict[key]
-                    self.setBackgroundColor(widget, color)
+                    box_style.append(self.setBackgroundColor(widget, color))
+                if key==BoxStyle.p_COLOR:
+                    color = prop_dict[key]
+                    box_style.append(self.setColor(widget, color))
+            if box_style:
+                widget.setStyleSheet("".join(box_style))
     def setBackgroundColor(self, widget, color):
         #widget.setStyleSheet("QWidget {background-color:"+color+";}")
-        style = "background-color:"+color+";"
-        widget.setStyleSheet(style)
+        return "background-color:"+color+";"
+    def setColor(self, widget, color):
+        return "color:"+color+";"
     def render_text(self, tag, element):
         text = QLabel(element.content)
         text.setWordWrap(True)

@@ -35,10 +35,8 @@ class BabyBrowser:
         dom = self.html_tokenizer.dom
         #Default Browser Styles
         self.css_tokenizer.tokenize(self.default_css, dom) 
-        #Style in Heading
+        #Style in Head
         style_elements = dom.find_children_by_tag("style")
-        print("------------------------")
-        print(style_elements)
         for element in style_elements:
             self.css_tokenizer.tokenize(element.content, dom) 
 
