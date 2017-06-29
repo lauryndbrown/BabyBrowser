@@ -13,10 +13,6 @@ class RenderObject:
         return str(self.properties)
     def __repr__(self):
         return str(self)
-   # def inherit(self, parent_css):
-   #     for child_props, parent_props in zip(self.properties, parent_css.properties):
-   #         parent_props.properties.update(self.get_set_properties())            
-   #         child_props.properties.update(parent_props.properties)
 
 class CSSUnit:
     PIXEL = "px"
