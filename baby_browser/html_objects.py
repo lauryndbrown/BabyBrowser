@@ -10,29 +10,25 @@ class Html_Object:
             self.children = children
         self.attrs = {CLASS:None, ID:None}
         self.parse_state = None
-        self.css = css
-    def inherit_parent_css(self):
-        old_css = self.css
-        if not old_css:
-            old_css = RenderObject(BoxStyle.BLOCK)
-        parent_css = self.get_parent_css()
-        print("Parent:", parent_css)
-        print("Child:", old_css)
-        parent_css.inherit(old_css)
-        print("Combine:", parent_css)
-        print("----------------------\n")
-        self.css = parent_css
-    def get_parent_css(self):
-        css =  RenderObject(BoxStyle.BLOCK)
-        print("TAG:", str(self))
-        self._get_parent_css_helper(self.parent, css)
-        return css
-    def _get_parent_css_helper(self, parent, css):
-        if parent:
-            self._get_parent_css_helper(parent.parent, css)
-            print(parent.tag)
-            if parent.css:
-                css.inherit(parent.css)
+        if css:
+            self.css = css
+        else:
+            self.css = RenderObject(BoxStyle.BLOCK)
+    def get_property_dict(self, prop_name):
+        for prop in self.css.properties:
+            if prop_name in prop.properties:
+                return prop.properties
+    def get_css_property(self, prop_name, prop_type=None):
+        prop_dict = self.get_property_dict(prop_name)
+        if prop_dict[prop_name]:
+            return prop_dict[prop_name]
+        if self.parent:
+            prop_value = self.parent.get_css_property(prop_name)
+            if prop_value and not prop_dict[prop_name]:
+                prop_dict[prop_name] = prop_value
+            return prop_value
+        return None
+        #return self.css.get(key) or self.parent.get_css_property(key)
 class Text(Html_Object):
     def __init__(self, content, original_text=None, parent=None):
         super().__init__(parent, None)

@@ -15,7 +15,6 @@ class QT_HTML_Renderer:
         self.traverse_dom(root, htmlWidget, layout)
     def traverse_dom(self, root, htmlWidget, layout):
         if root.parse_state==IN_BODY:
-            root.inherit_parent_css()
             self.render_in_body_content(root, layout)
         if isinstance(root, Tag):
             if root.tag.lower()=="title":
@@ -65,35 +64,32 @@ class QT_HTML_Renderer:
     def render_box_styles(self, element, widget):
         css = element.css
         box_style = []
-        if css:
-            prop_dict = css.box_style.get_set_properties()
-            for key in prop_dict:
-                if key==BoxStyle.p_BACKGROUND_COLOR:
-                    color = prop_dict[key]
-                    box_style.append(self.setBackgroundColor(widget, color))
-                if key==BoxStyle.p_COLOR:
-                    color = prop_dict[key]
-                    box_style.append(self.setColor(widget, color))
-            if box_style:
-                widget.setStyleSheet("".join(box_style))
+
+        background_color = element.get_css_property(BoxStyle.p_BACKGROUND_COLOR)
+        color = element.get_css_property(BoxStyle.p_COLOR)
+        
+        box_style.append(self.setBackgroundColor(widget, background_color))
+        box_style.append(self.setColor(widget, color))
+        
+        #Apply Styles
+        widget.setStyleSheet("".join(box_style))
+
     def render_text(self, element):
         text = QLabel(element.content)
         text.setWordWrap(True)
         text.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum);
-        css = element.css
-        if css:
-            prop_dict = css.get_set_properties()
-            font = QFont()
-            for key in prop_dict:
-                if key == Font.p_FONT_WEIGHT:
-                    weight = prop_dict[key]
-                    self.set_font_weight(font, weight)
-                if key == Font.p_FONT_SIZE:
-                    size = prop_dict[key]
-                    self.set_font_point_size(font, size)
-            text.setFont(font)
+
+        font = QFont()
+
+        weight = element.get_css_property(Font.p_FONT_WEIGHT)
+        size = element.get_css_property(Font.p_FONT_SIZE)
+        
+        self.set_font_weight(font, weight)
+        self.set_font_point_size(font, size)
+        
+        text.setFont(font)
         return text
-#CSS
+    #CSS
     def setBackgroundColor(self, widget, color):
         return "background-color:"+color+";"
     def setColor(self, widget, color):
