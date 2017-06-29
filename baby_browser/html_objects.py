@@ -1,3 +1,4 @@
+from baby_browser.css_objects import *
 CLASS = "class"
 ID = "id"
 class Html_Object:
@@ -10,6 +11,28 @@ class Html_Object:
         self.attrs = {CLASS:None, ID:None}
         self.parse_state = None
         self.css = css
+    def inherit_parent_css(self):
+        old_css = self.css
+        if not old_css:
+            old_css = RenderObject(BoxStyle.BLOCK)
+        parent_css = self.get_parent_css()
+        print("Parent:", parent_css)
+        print("Child:", old_css)
+        parent_css.inherit(old_css)
+        print("Combine:", parent_css)
+        print("----------------------\n")
+        self.css = parent_css
+    def get_parent_css(self):
+        css =  RenderObject(BoxStyle.BLOCK)
+        print("TAG:", str(self))
+        self._get_parent_css_helper(self.parent, css)
+        return css
+    def _get_parent_css_helper(self, parent, css):
+        if parent:
+            self._get_parent_css_helper(parent.parent, css)
+            print(parent.tag)
+            if parent.css:
+                css.inherit(parent.css)
 class Text(Html_Object):
     def __init__(self, content, original_text=None, parent=None):
         super().__init__(parent, None)
@@ -86,7 +109,7 @@ class DOM:
        return self._find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_TAG, [])
     def _find_children_helper(self, root, child_name, find_by, results=[]):
         #print("Root:{}, Name:{}, Find:{}, Results:{}".format(root, child_name, find_by, results))
-        if root:
+        if root and isinstance(root, Tag):
             if find_by==DOM.FIND_BY_TAG and root.tag==child_name:
                 results.append(root)
             elif find_by==DOM.FIND_BY_CLASS and root.attrs[CLASS] and child_name in root.attrs[CLASS]:
@@ -102,7 +125,12 @@ class DOM:
     def str_css(self):
         return self.str_traverse(self.root, 0, True)
     def str_traverse(self, root, level, css=False):
-        lst_root = "  "*level+str(root)
+        if isinstance(root, Tag): 
+            lst_root = "  "*level+str(root)
+            if root.content and not css:
+                lst_root += "\n"+("  "*(level+1))+str(root.content)
+        else:
+            lst_root = "  "*level+"data:"+str(root)
         if root.css and css:
             lst_root += "\n"+("  "*(level+1))+str(root.css)
         for child in root.children:

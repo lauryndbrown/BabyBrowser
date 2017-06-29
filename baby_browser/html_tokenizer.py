@@ -21,7 +21,7 @@ HEAD = "head"
 STYLE = "style"
 class Html_Tokenizer:
     def handle_opentag(self, tag_str, attrs):
-        print("Found start tag:", tag_str, attrs)
+        #print("Found start tag:", tag_str, attrs)
         tag = Tag(tag_str)
         tag.parse_state = self.current_state 
         if attrs:
@@ -30,12 +30,16 @@ class Html_Tokenizer:
         if tag.is_self_closing:
             self.handle_closetag(tag)
     def handle_closetag(self, tag):
-        print("Found end tag:", tag)
+        #print("Found end tag:", tag)
         self.dom.close_child() 
     def handle_data(self, display_data, original_data):
-        print("Found data:", display_data)
-        data = Text(display_data, original_data)
-        self.dom.add_text(data)
+        #print("Found data:", display_data)
+        if self.current_state==IN_BODY:
+            data = Text(display_data, original_data)
+            data.parse_state = self.current_state 
+            self.dom.add_text(data)
+        else:
+            self.dom.add_content(display_data)
     def p_opentag(self, match):
         tag = match.group("tag")
         attrs = match.group("attrs")

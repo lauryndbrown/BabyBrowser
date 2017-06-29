@@ -237,18 +237,8 @@ class Browser_GUI:
         self.widget.show()
         sys.exit(self.app.exec_())
     def render_dom(dom, htmlWidget):
-        Browser_GUI.traverse_dom(dom.root, htmlWidget, htmlWidget.widget.layout())
-    def traverse_dom(root, htmlWidget, layout):
-        if root.tag.lower()=="title":
-            title = root.content.rstrip()
-            Browser_GUI.HTML_RENDER.set_page_title(title, htmlWidget)
-        if root.tag.lower()=="body":
-            Browser_GUI.HTML_RENDER.render_body(root, htmlWidget)
-        if root.parse_state==IN_BODY:
-            Browser_GUI.HTML_RENDER.render_in_body_content(root, layout)
-        #Process the Children
-        for child in root.children:
-            Browser_GUI.traverse_dom(child, htmlWidget, layout)
+        Browser_GUI.HTML_RENDER.render_dom(dom.root, htmlWidget, htmlWidget.widget.layout())
+   
         
 if __name__=="__main__":
     gui = Browser_GUI()

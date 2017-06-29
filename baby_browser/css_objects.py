@@ -10,12 +10,14 @@ class RenderObject:
             result.update(prop_result)
         return result
     def __str__(self):
-        result = []
-        for prop in self.properties:
-            result += str(prop)
-        return "".join(result)
+        return str(self.properties)
     def __repr__(self):
         return str(self)
+    def inherit(self, parent_css):
+        for child_props, parent_props in zip(self.properties, parent_css.properties):
+            parent_props.properties.update(self.get_set_properties())            
+            child_props.properties.update(parent_props.properties)
+
 class CSSUnit:
     PIXEL = "px"
     POINT = "pt"
@@ -26,6 +28,8 @@ class CSSUnit:
         self.value = int(value)
     def __str__(self):
         return "{}{}".format(self.value, self.unit)
+    def __repr__(self):
+        return str(self)
 class Text:
     CENTER = "center"
     LEFT = "left"
