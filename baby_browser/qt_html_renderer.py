@@ -40,9 +40,9 @@ class QT_HTML_Renderer:
             tag = element.tag.lower()
             if tag in QT_HTML_Renderer.HEADERS:
                 widget = self.render_text(element)
-            if tag==QT_HTML_Renderer.IMG:
+            elif tag==QT_HTML_Renderer.IMG:
                 widget = self.render_img(element)
-            if tag==QT_HTML_Renderer.HR:
+            elif tag==QT_HTML_Renderer.HR:
                 widget = self.render_hr(element)
             else:
                 widget = QWidget()

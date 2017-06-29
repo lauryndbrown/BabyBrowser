@@ -39,8 +39,8 @@ class BabyBrowser:
         style_elements = dom.find_children_by_tag("style")
         for element in style_elements:
             self.css_tokenizer.tokenize(element.content, dom) 
-
-        return self.html_tokenizer.dom
+        print(dom)
+        return dom
     def show_gui(self):
         self.gui = Browser_GUI(self) 
     def go_back(self):
