@@ -33,13 +33,15 @@ class QT_HTML_Renderer:
         self.render_box_styles(element, widget)
     def render_in_body_content(self, element, layout):
         widget = self.render_tag(element)
-        layout.addWidget(widget)
+        if widget:
+            layout.addWidget(widget)
     def render_tag(self, element):
         widget = None
         if isinstance(element, Tag):
             tag = element.tag.lower()
             if tag in QT_HTML_Renderer.HEADERS:
-                widget = self.render_text(element)
+               # widget = self.render_text(element)
+                widget = None
             elif tag==QT_HTML_Renderer.IMG:
                 widget = self.render_img(element)
             elif tag==QT_HTML_Renderer.HR:
@@ -48,7 +50,8 @@ class QT_HTML_Renderer:
                 widget = QWidget()
         elif isinstance(element, Text):
             widget = self.render_text(element)
-        self.render_box_styles(element, widget)
+        if widget:
+            self.render_box_styles(element, widget)
         return widget
     def render_hr(self, element):
         hr = QFrame()
