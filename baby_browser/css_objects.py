@@ -1,14 +1,16 @@
 class RenderObject:
+    BOX_STYLE = "Box Style"
+    FONT = "Font"
     def __init__(self, display):
         self.box_style = BoxStyle(display)
         self.font = Font()
-        self.properties = [self.box_style, self.font]
-    def get_set_properties(self):
-        result = {}
-        for prop in self.properties:
-            prop_result = prop.get_set_properties()
-            result.update(prop_result)
-        return result
+        self.properties = {RenderObject.BOX_STYLE:self.box_style, RenderObject.FONT:self.font}
+   # def get_set_properties(self):
+   #     result = {}
+   #     for prop in self.properties:
+   #         prop_result = prop.get_set_properties()
+   #         result.update(prop_result)
+   #     return result
     def __str__(self):
         return str(self.properties)
     def __repr__(self):

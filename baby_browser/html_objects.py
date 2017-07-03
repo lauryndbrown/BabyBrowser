@@ -1,7 +1,7 @@
 from baby_browser.css_objects import *
 CLASS = "class"
 ID = "id"
-class Html_Object:
+class HtmlObject:
     def __init__(self, parent, children, css=None):
         self.parent = parent
         if children==None:
@@ -14,10 +14,6 @@ class Html_Object:
             self.css = css
         else:
             self.css = RenderObject(BoxStyle.BLOCK)
-    def get_property_dict(self, prop_name):
-        for prop in self.css.properties:
-            if prop_name in prop.properties:
-                return prop.properties
     def get_css_property(self, prop_name, prop_type=None):
         prop_dict = self.get_property_dict(prop_name)
         if prop_dict[prop_name]:
@@ -28,8 +24,7 @@ class Html_Object:
                 prop_dict[prop_name] = prop_value
             return prop_value
         return None
-        #return self.css.get(key) or self.parent.get_css_property(key)
-class Text(Html_Object):
+class Text(HtmlObject):
     def __init__(self, content, original_text=None, parent=None):
         super().__init__(parent, None)
         self.content = content
@@ -38,16 +33,16 @@ class Text(Html_Object):
         return self.content
     def __repr__(self):
         return self.__str__()
-class Tag(Html_Object):
+class Tag(HtmlObject):
     SELF_CLOSING = ['br','img', 'hr']
     def __init__(self, tag, content=None, parent=None, children=None):
         super().__init__(parent, children)
-        self.tag = tag
+        self.tag = tag.lower()
         self.content = content
         if tag in Tag.SELF_CLOSING:
-            self.is_self_closing = True
+            self.self_closing = True
         else:
-            self.is_self_closing = False
+            self.self_closing = False
     def add_attr(self, attr_name, attr_value):
         if attr_name.lower()==CLASS:
             self.attrs[CLASS] = attr_value.split()
@@ -55,6 +50,8 @@ class Tag(Html_Object):
             self.attrs[ID] = attr_value
         else: 
             self.attrs[attr_name] = attr_value
+    def is_self_closing(self):
+        return self.tag in Tag.SELF_CLOSING
     def __str__(self):
         return self.tag
     def __repr__(self):
@@ -66,7 +63,10 @@ class DOM:
 
     def __init__(self, root=None):
         self.root = root
-        self.current_level = None
+        if self.root:
+            self.current_level = self.root
+        else:
+            self.current_level = None
     def add_text(self, text_object):
         if self.root:
            self.current_level.children.append(text_object)
