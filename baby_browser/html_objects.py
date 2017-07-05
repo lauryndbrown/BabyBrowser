@@ -1,4 +1,4 @@
-from baby_browser.css_objects import *
+from baby_browser.css import *
 CLASS = "class"
 ID = "id"
 class HtmlObject:
@@ -13,16 +13,16 @@ class HtmlObject:
         if css:
             self.css = css
         else:
-            self.css = RenderObject(BoxStyle.BLOCK)
-    def get_css_property(self, prop_name, prop_type=None):
-        prop_dict = self.get_property_dict(prop_name)
-        if prop_dict[prop_name]:
-            return prop_dict[prop_name]
+            self.css = RenderObject()
+    def get_css_property(self, prop_name):
+        prop = self.css.properties[prop_name]
+        if prop:
+            return prop
         if self.parent:
-            prop_value = self.parent.get_css_property(prop_name)
-            if prop_value and not prop_dict[prop_name]:
-                prop_dict[prop_name] = prop_value
-            return prop_value
+            parent_prop = self.parent.get_css_property(prop_name)
+            if parent_prop and not prop:
+                self.css.properties[prop_name] = parent_prop
+            return parent_prop
         return None
 class Text(HtmlObject):
     def __init__(self, content, original_text=None, parent=None):
@@ -88,22 +88,22 @@ class DOM:
         self.current_level.content = content 
     def find_children_by_class(self, child_name, root=None):
        if root:
-            return self._find_children_helper(root, child_name.lower(), DOM.FIND_BY_CLASS, [])
-       return self._find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_CLASS, [])
+            return self.__find_children_helper(root, child_name.lower(), DOM.FIND_BY_CLASS, [])
+       return self.__find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_CLASS, [])
     def find_child_by_id(self, child_name, root=None):
        if root:
-            results, result_root = self._find_children_helper(root, child_name.lower(), DOM.FIND_BY_ID, [])
+            results, result_root = self.__find_children_helper(root, child_name.lower(), DOM.FIND_BY_ID, [])
        else:
-            results, result_root = self._find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_ID, [])
+            results, result_root = self.__find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_ID, [])
        if results:
             return results[0]
        else:
             return None
     def find_children_by_tag(self, child_name, root=None):
        if root:
-            return self._find_children_helper(root, child_name.lower(), DOM.FIND_BY_TAG, [])
-       return self._find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_TAG, [])
-    def _find_children_helper(self, root, child_name, find_by, results=[]):
+            return self.__find_children_helper(root, child_name.lower(), DOM.FIND_BY_TAG, [])
+       return self.__find_children_helper(self.root, child_name.lower(), DOM.FIND_BY_TAG, [])
+    def __find_children_helper(self, root, child_name, find_by, results=[]):
         #print("Root:{}, Name:{}, Find:{}, Results:{}".format(root, child_name, find_by, results))
         if root and isinstance(root, Tag):
             if find_by==DOM.FIND_BY_TAG and root.tag==child_name:
@@ -114,13 +114,13 @@ class DOM:
                 results.append(root)
                 return results
             for child in root.children:
-                child_results = self._find_children_helper(child, child_name, find_by, results)
+                child_results = self.__find_children_helper(child, child_name, find_by, results)
             return results
     def __str__(self):
-        return self.str_traverse(self.root, 0)
+        return self.__str_traverse(self.root, 0)
     def str_css(self):
-        return self.str_traverse(self.root, 0, True)
-    def str_traverse(self, root, level, css=False):
+        return self.__str_traverse(self.root, 0, True)
+    def __str_traverse(self, root, level, css=False):
         if isinstance(root, Tag): 
             lst_root = "  "*level+str(root)
             if root.content and not css:
@@ -130,7 +130,7 @@ class DOM:
         if root.css and css:
             lst_root += "\n"+("  "*(level+1))+str(root.css)
         for child in root.children:
-            lst_root+= "\n"+self.str_traverse(child, level+1, css)
+            lst_root+= "\n"+self.__str_traverse(child, level+1, css)
         return lst_root
     def __repr__(self):
         return self.__str__()

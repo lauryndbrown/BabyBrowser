@@ -8,8 +8,8 @@ class BabyBrowser:
     BOOKMARK_FILE = os.path.join("baby_browser", "bookmarks.txt")
     DEFAULT_CSS = os.path.join("baby_browser", "browser.css")
     def __init__(self):
-        self.html_tokenizer = Html_Tokenizer()
-        self.css_tokenizer = CSS_Tokenizer()
+        self.html_tokenizer = HtmlTokenizer()
+        self.css_tokenizer = CSSTokenizer()
         self.gui = None
         self.networking = Network()
         self.previous_pages = []

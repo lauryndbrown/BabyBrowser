@@ -1,3 +1,4 @@
+from collections import namedtuple
 class RenderObject:
     BOX_STYLE = "Box Style"
     FONT = "Font"
@@ -8,6 +9,9 @@ class RenderObject:
             self.box_style = BoxStyle(BoxStyle.BLOCK)
         self.font = Font()
         self.properties = {RenderObject.BOX_STYLE:self.box_style, RenderObject.FONT:self.font}
+   # def update_properties(self, render_object):
+   #     for prop in self.properties.values():
+   #         prop
     def __str__(self):
         return str(self.properties)
     def __repr__(self):
@@ -76,6 +80,10 @@ class Font(CSS_Style):
                         Font.p_FONT_SIZE:None,
                         Font.p_FONT_WEIGHT:None
                         }
+        self.family = None
+        self.style = None
+        self.size = None
+        self.weight = None
 class BoxStyleAttribute:
     def __init__(self, top=None, right=None, bottom=None, left=None):
         self.top = top

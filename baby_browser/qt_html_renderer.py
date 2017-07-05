@@ -84,8 +84,8 @@ class QT_HTML_Renderer:
 
         font = QFont()
 
-        weight = element.get_css_property(Font.p_FONT_WEIGHT)
-        size = element.get_css_property(Font.p_FONT_SIZE)
+        weight = element.get_css_property(p_FONT_WEIGHT)
+        size = element.get_css_property(p_FONT_SIZE)
         
         self.set_font_weight(font, weight)
         self.set_font_point_size(font, size)

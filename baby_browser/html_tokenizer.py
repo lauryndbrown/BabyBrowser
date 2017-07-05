@@ -1,5 +1,6 @@
 import re
 from baby_browser.html_objects import * 
+import logging, sys
 #Tokens
 t_OPENTAG = re.compile("\s*<(?P<tag>\w+)\s*(?P<attrs>[^>]+)?>")
 t_ATTRIBUTES = re.compile("(?P<attr_name>\w+)=\"(?P<attr_value>[^\"]+)\s*")
@@ -25,7 +26,7 @@ class HtmlTokenizer:
     """
     def __init__(self):
         self.dom = None
-        self.current_state = None 
+        self.current_state = None
     def tokenize(self, html):
         """Method to be called that creates the DOM.
         :param html: str containing html markup
@@ -34,8 +35,9 @@ class HtmlTokenizer:
         index = 0
         self.dom = DOM()
         self.current_state = BEFORE_HTML 
+        print(html)
         while index<len(html):
-            index = self.parse(html, index)
+            index = self.__parse(html, index)
     def __parse(self, html, index):
         """Method called by tokenize. Matches regex tokens in the HTML string.
         :param html: str containing html markup
@@ -47,18 +49,18 @@ class HtmlTokenizer:
         whitespace = t_WHITESPACE.match(html[index:])
         data = t_DATA.match(html[index:])
         if opentag:
-            tag, attrs, tag_len = self.p_opentag(opentag)
-            self.handle_opentag(tag, attrs)
+            tag, attrs, tag_len = self.__p_opentag(opentag)
+            self.__handle_opentag(tag, attrs)
             add_to_index = tag_len
         elif closetag:
-            tag, attrs, tag_len = self.p_closetag(closetag)
-            self.handle_closetag(tag)
+            tag, attrs, tag_len = self.__p_closetag(closetag)
+            self.__handle_closetag(tag)
             add_to_index = tag_len+2
         elif whitespace:
             add_to_index = len(whitespace.group(0))
         elif data:
-            data_result = self.p_data(data.group(0))
-            self.handle_data(data_result, data.group(0))
+            data_result = self.__p_data(data.group(0))
+            self.__handle_data(data_result, data.group(0))
             add_to_index = len(data.group(0))
         else:
             add_to_index = 1
@@ -72,7 +74,7 @@ class HtmlTokenizer:
         """
         tag = match.group("tag")
         attrs = match.group("attrs")
-        self.set_opentag_state(tag)
+        self.__set_opentag_state(tag)
         return tag, attrs, len(match.group(0))
     def __p_opentag_attrs(self, tag, attrs):
         """Method called by handle_open_tag. 
@@ -105,7 +107,7 @@ class HtmlTokenizer:
         :param data: str of internal text found within an HTML tag
         :returns: cleaned input string 
         """
-        data = self.remove_excess_whitespace(data)
+        data = self.__remove_excess_whitespace(data)
         return data
 ####Data Handling
     def __handle_opentag(self, tag_str, attrs):
@@ -114,20 +116,22 @@ class HtmlTokenizer:
         :param attrs: str representing html tag attributes 
         :returns: None. Modifies the DOM.
         """
-        #print("Found start tag:", tag_str, attrs)
+        print("Found start tag:", tag_str, attrs)
+        logging.debug("Found start tag:", tag_str, attrs)
         tag = Tag(tag_str)
         tag.parse_state = self.current_state 
         if attrs:
-            self.p_opentag_attrs(tag, attrs)
+            self.__p_opentag_attrs(tag, attrs)
         self.dom.add_child(tag) 
-        if tag.is_self_closing:
-            self.handle_closetag(tag)
+        if tag.is_self_closing():
+            self.__handle_closetag(tag)
     def __handle_closetag(self, tag):
         """Method called by parse. Closes Tag in the DOM.
         :param tag: str representing close html tag
         :returns: None. Modifies the DOM.
         """
-        #print("Found end tag:", tag)
+        print("Found end tag:", tag)
+        logging.debug("Found end tag:", tag)
         self.dom.close_child() 
     def __handle_data(self, display_data, original_data):
         """Method called by parse. Adds inner text to the DOM.
@@ -137,7 +141,8 @@ class HtmlTokenizer:
         :param original_data: str representing the original text
         :returns: None. Modifies the DOM.
         """
-        #print("Found data:", display_data)
+        print("Found data:", display_data)
+        logging.debug("Found data:", display_data)
         if self.current_state==IN_BODY:
             data = Text(display_data, original_data)
             data.parse_state = self.current_state 
