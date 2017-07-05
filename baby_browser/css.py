@@ -1,9 +1,11 @@
 from collections import namedtuple
 #Property Names
+#  Font Property Names
 p_FONT_FAMILY = "font-family"
 p_FONT_STYLE = "font-style"
 p_FONT_SIZE = "font-size"
 p_FONT_WEIGHT = "font-weight"
+#  BoxStyle Property Names
 p_BACKGROUND_COLOR = "background-color"
 p_COLOR = "color"
 p_WIDTH = "width"
@@ -14,6 +16,27 @@ p_MAX_WIDTH = "max_width"
 p_MAX_HEIGHT = "max_height"
 p_MIN_WIDTH = "min_width"
 p_MIN_HEIGHT = "min_height"
+#  Text Property Names
+p_COLOR = "color"
+p_ALIGN = "text-align"
+p_DECORATION = "decoration"
+p_TRANSFORM = "text-transform"
+
+#Text Constants
+TEXT_ALIGN_CENTER = "center"
+TEXT_ALIGN_LEFT = "left"
+TEXT_ALIGN_RIGHT = "right"
+TEXT_ALIGN_JUSTIFY = "justify"
+TEXT_ALIGNS = [TEXT_ALIGN_CENTER, TEXT_ALIGN_LEFT, TEXT_ALIGN_RIGHT, TEXT_ALIGN_JUSTIFY]
+TEXT_DECORATION_NONE = "none"
+TEXT_DECORATION_OVERLINE = "overline"
+TEXT_DECORATION_LINE_THROUGH = "line-through"
+TEXT_DECORATION_UNDERLINE = "underline"
+TEXT_DECORATIONS = [TEXT_DECORATION_NONE, TEXT_DECORATION_OVERLINE, TEXT_DECORATION_LINE_THROUGH, TEXT_DECORATION_UNDERLINE]
+UPPERCASE = "uppercase"
+LOWERCASE = "lowercase"
+CAPITALIZE = "capitalize"
+TEXT_TRANSFORMS = [UPPERCASE, LOWERCASE, CAPITALIZE] 
 
 #Font Constants
 FONT_STYLE_NORMAL = "normal"
@@ -35,7 +58,7 @@ VISIBLE = "visible"
 PIXEL = "px"
 POINT = "pt"
 PERCENT = "%"
-TYPES = [PIXEL, POINT, PERCENT]
+UNITS = [PIXEL, POINT, PERCENT]
 
 class RenderObject:
     def __init__(self):
@@ -43,7 +66,8 @@ class RenderObject:
         p_FONT_FAMILY:None,p_FONT_STYLE:None,p_FONT_SIZE:None,p_FONT_WEIGHT:None,
         p_DISPLAY:DISPLAY_BLOCK,p_HEIGHT:None,p_WIDTH:None,  
         p_BACKGROUND_COLOR:None,p_COLOR:None,p_VISIBILITY:VISIBLE,  
-        p_MIN_HEIGHT:None,p_MIN_WIDTH:None,p_MAX_HEIGHT:None,p_MAX_WIDTH:None
+        p_MIN_HEIGHT:None,p_MIN_WIDTH:None,p_MAX_HEIGHT:None,p_MAX_WIDTH:None,
+        p_COLOR:None,p_ALIGN:None,p_DECORATION:None,p_TRANSFORM:None
                         }
     def get_set_properties(self):
         return {key:value for (key,value) in self.properties.items() if value}
@@ -63,26 +87,6 @@ class CSSUnit:
         return "{}{}".format(self.value, self.unit)
     def __repr__(self):
         return str(self)
-class Text:
-    CENTER = "center"
-    LEFT = "left"
-    RIGHT = "right"
-    JUSTIFY = "justify"
-    ALIGNS = [CENTER, LEFT, RIGHT, JUSTIFY]
-    NONE = "none"
-    OVERLINE = "overline"
-    LINE_THROUGH = "line-through"
-    UNDERLINE = "underline"
-    DECORATIONS = [NONE, OVERLINE, LINE_THROUGH, UNDERLINE]
-    UPPERCASE = "uppercase"
-    LOWERCASE = "lowercase"
-    CAPITALIZE = "capitalize"
-    TRANSFORMS = [UPPERCASE, LOWERCASE, CAPITALIZE] 
-    def __init__(self, color=None, align=None, decoration=None, transform=None):
-        self.color = color
-        self.align = align
-        self.decoration = decoration
-        self.transform = transform
 class BoxStyleAttribute:
     def __init__(self, top=None, right=None, bottom=None, left=None):
         self.top = top

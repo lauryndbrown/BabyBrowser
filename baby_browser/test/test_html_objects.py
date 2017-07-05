@@ -1,6 +1,6 @@
 import unittest
 from baby_browser.html_objects import *
-from baby_browser.css_objects import *
+from baby_browser.css import *
 
 class TestHtmlObjects(unittest.TestCase):
     def test_default_init(self):
