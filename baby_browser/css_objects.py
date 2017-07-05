@@ -1,16 +1,13 @@
 class RenderObject:
     BOX_STYLE = "Box Style"
     FONT = "Font"
-    def __init__(self, display):
-        self.box_style = BoxStyle(display)
+    def __init__(self, display=None):
+        if display:
+            self.box_style = BoxStyle(display)
+        else:
+            self.box_style = BoxStyle(BoxStyle.BLOCK)
         self.font = Font()
         self.properties = {RenderObject.BOX_STYLE:self.box_style, RenderObject.FONT:self.font}
-   # def get_set_properties(self):
-   #     result = {}
-   #     for prop in self.properties:
-   #         prop_result = prop.get_set_properties()
-   #         result.update(prop_result)
-   #     return result
     def __str__(self):
         return str(self.properties)
     def __repr__(self):
@@ -49,18 +46,12 @@ class Text:
         self.decoration = decoration
         self.transform = transform
 class CSS_Style:
+    def __init__(self):
+        self.properties = None
     def get_set_properties(self):
-        result = {}
-        for key in self.properties:
-            if self.properties[key]:
-                result[key] = self.properties[key]
-        return result
+        return {key:value for (key,value) in self.properties.items() if value}
     def __str__(self):
-        result = []
-        for key in self.properties:
-            if self.properties[key]:
-                result.append(key+":"+str(self.properties[key]))
-        return str(result)
+        return str(self.get_set_properties())
     def __repr__(self):
         return str(self)
         
@@ -79,7 +70,12 @@ class Font(CSS_Style):
     FONT_WEIGHTS = [FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD]
     def __init__(self):
         super().__init__()
-        self.properties = {Font.p_FONT_FAMILY:None, Font.p_FONT_STYLE:None, Font.p_FONT_SIZE:None, Font.p_FONT_WEIGHT:None}
+        self.properties = {
+                        Font.p_FONT_FAMILY:None,
+                        Font.p_FONT_STYLE:None,
+                        Font.p_FONT_SIZE:None,
+                        Font.p_FONT_WEIGHT:None
+                        }
 class BoxStyleAttribute:
     def __init__(self, top=None, right=None, bottom=None, left=None):
         self.top = top
@@ -118,7 +114,18 @@ class BoxStyle(CSS_Style):
 
     def __init__(self, display):
         super().__init__()
-        self.properties = {BoxStyle.p_DISPLAY:display, BoxStyle.p_HEIGHT:None, BoxStyle.p_WIDTH:None,  BoxStyle.p_BACKGROUND_COLOR:None,  BoxStyle.p_COLOR:None,  BoxStyle.p_VISIBILITY:BoxStyle.VISIBLE,  BoxStyle.p_MIN_HEIGHT:None,   BoxStyle.p_MIN_WIDTH:None,  BoxStyle.p_MAX_HEIGHT:None,   BoxStyle.p_MAX_WIDTH:None}
+        self.properties = {
+                        BoxStyle.p_DISPLAY:display, 
+                        BoxStyle.p_HEIGHT:None, 
+                        BoxStyle.p_WIDTH:None,  
+                        BoxStyle.p_BACKGROUND_COLOR:None,  
+                        BoxStyle.p_COLOR:None,  
+                        BoxStyle.p_VISIBILITY:BoxStyle.VISIBLE,  
+                        BoxStyle.p_MIN_HEIGHT:None,   
+                        BoxStyle.p_MIN_WIDTH:None,  
+                        BoxStyle.p_MAX_HEIGHT:None,   
+                        BoxStyle.p_MAX_WIDTH:None
+                        }
         #self.margin = BoxStyleAttribute()
         #self.padding = BoxStyleAttribute()
         #self.border = Border()
