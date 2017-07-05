@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from baby_browser.css import *
-from baby_browser.html_tokenizer import *
-from baby_browser.networking import *
+from baby_browser.tokenizer.css import *
+from baby_browser.tokenizer.html_tokenizer import *
+from baby_browser.utility.networking import *
 
 class QT_HTML_Renderer:
     HEADERS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
@@ -68,8 +68,8 @@ class QT_HTML_Renderer:
         css = element.css
         box_style = []
 
-        background_color = element.get_css_property(BoxStyle.p_BACKGROUND_COLOR)
-        color = element.get_css_property(BoxStyle.p_COLOR)
+        background_color = element.get_css_property(p_BACKGROUND_COLOR)
+        color = element.get_css_property(p_COLOR)
         
         box_style.append(self.setBackgroundColor(widget, background_color))
         box_style.append(self.setColor(widget, color))
@@ -98,9 +98,9 @@ class QT_HTML_Renderer:
     def setColor(self, widget, color):
         return "color:"+color+";"
     def set_font_weight(self, font, weight):
-        if weight==Font.FONT_WEIGHT_BOLD:
+        if weight==FONT_WEIGHT_BOLD:
             font.setBold(True)
-        elif weight==Font.FONT_WEIGHT_NORMAL:
+        elif weight==FONT_WEIGHT_NORMAL:
             fold.setBold(False)
     def set_font_point_size(self, font, size):
         font.setPointSize(size.value)

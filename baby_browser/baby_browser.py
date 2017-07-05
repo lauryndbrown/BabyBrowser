@@ -1,12 +1,12 @@
-from baby_browser.gui import * 
-from baby_browser.html_tokenizer import * 
-from baby_browser.css_tokenizer import * 
-from baby_browser.networking import * 
+from baby_browser.gui.gui import * 
+from baby_browser.tokenizer.html_tokenizer import * 
+from baby_browser.tokenizer.css_tokenizer import * 
+from baby_browser.utility.networking import * 
 import pickle
 import os
 class BabyBrowser:
-    BOOKMARK_FILE = os.path.join("baby_browser", "bookmarks.txt")
-    DEFAULT_CSS = os.path.join("baby_browser", "browser.css")
+    BOOKMARK_FILE = os.path.join("baby_browser","utility", "bookmarks.txt")
+    DEFAULT_CSS = os.path.join("baby_browser", "assets", "css", "browser.css")
     def __init__(self):
         self.html_tokenizer = HtmlTokenizer()
         self.css_tokenizer = CSSTokenizer()
@@ -15,6 +15,7 @@ class BabyBrowser:
         self.previous_pages = []
         self.forward_pages = []
         self.current_url = None
+        self.bookmarks_has_changed = False
         if os.stat(BabyBrowser.BOOKMARK_FILE).st_size!=0:
             with open(BabyBrowser.BOOKMARK_FILE, 'rb') as bookmarks_file:
                 self.bookmarks = pickle.load(bookmarks_file)
@@ -69,13 +70,16 @@ class BabyBrowser:
     def add_bookmark(self, url, title=None, icon=None):
         if not self.has_bookmark(url):
             self.bookmarks.append(MenuWebPage(url, title))
+            self.bookmarks_has_changed = True
     def remove_bookmark(self, url):
         if self.has_bookmark(url):
             index = self.index_of_bookmark(url)
             self.bookmarks.pop(index)
+            self.bookmarks_has_changed = True
     def on_close(self):
-        with open(BabyBrowser.BOOKMARK_FILE, 'wb') as bookmarks_file:
-            pickle.dump(self.bookmarks, bookmarks_file, protocol=pickle.HIGHEST_PROTOCOL)
+        if self.bookmarks_has_changed:
+            with open(BabyBrowser.BOOKMARK_FILE, 'wb') as bookmarks_file:
+                pickle.dump(self.bookmarks, bookmarks_file, protocol=pickle.HIGHEST_PROTOCOL)
 class MenuWebPage:
     def __init__(self, url, title=None, icon=None):
         self.url = url

@@ -1,4 +1,4 @@
-from baby_browser.css import *
+from baby_browser.tokenizer.css import *
 CLASS = "class"
 ID = "id"
 class HtmlObject:

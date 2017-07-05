@@ -4,21 +4,22 @@ import os
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from baby_browser.html_tokenizer import *
-from baby_browser.qt_html_renderer import *
+from baby_browser.tokenizer.html_tokenizer import *
+from baby_browser.gui.qt_html_renderer import *
 #Address bar for inserting a URI
 #Back and forward buttons
 #Bookmarking options
 #Refresh and stop buttons for refreshing or stopping the loading of current documents
 #Home button that takes you to your home page
 #Among those are the address bar, status bar and tool bar
+IMG_PATH = os.path.join("baby_browser", "assets", "images")
+FONT_PATH = os.path.join("baby_browser", "assets", "fonts")
 class Browser_Widget(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
     def initUI(self):
         #color background white
-
         self.title = None
 
         #Scoll Area Properites
@@ -48,9 +49,9 @@ class Browser_Main_Widget(QMainWindow):
         self.browser = browser
         self.initUI()
     def initUI(self):
-        icon_path =  os.path.join("baby_browser", "images", "crib_background.png")
+        icon_path =  os.path.join(IMG_PATH, "crib_background.png")
         self.setWindowIcon(QIcon(icon_path))
-        self.page_icon = QIcon(os.path.join("baby_browser", "images", "page.png"))
+        self.page_icon = QIcon(os.path.join(IMG_PATH,  "page.png"))
 
 
         #Tabs
@@ -63,7 +64,7 @@ class Browser_Main_Widget(QMainWindow):
         self.setCentralWidget(self.tabBar)
 
         new_tab_button = QPushButton()
-        tab_icon_path =  os.path.join("baby_browser", "images", "new folder black.png")
+        tab_icon_path =  os.path.join(IMG_PATH, "new folder black.png")
         new_tab_button.setToolTip('New Tab')
         new_tab_button.setIcon(QIcon(tab_icon_path))
         button_font = new_tab_button.font()
@@ -83,22 +84,22 @@ class Browser_Main_Widget(QMainWindow):
         self.urlBar = QLineEdit()
         self.urlBar.returnPressed.connect(self.fetch_url)
         submit_button = QPushButton()
-        submit_button.setIcon(QIcon(os.path.join("baby_browser", "images", "search.png")))
+        submit_button.setIcon(QIcon(os.path.join(IMG_PATH, "search.png")))
         submit_button.clicked.connect(self.fetch_url)
         submit_button.setToolTip('Sumbit Url')
         #Back/Forward Buttons
         back_button = QPushButton()
-        back_button.setIcon(QIcon(os.path.join("baby_browser", "images", "back.png")))
+        back_button.setIcon(QIcon(os.path.join(IMG_PATH, "back.png")))
         back_button.setToolTip('Back')
         back_button.clicked.connect(self.go_back)
         forward_button = QPushButton()
-        forward_button.setIcon(QIcon(os.path.join("baby_browser", "images", "forward.png")))
+        forward_button.setIcon(QIcon(os.path.join(IMG_PATH, "forward.png")))
         forward_button.setToolTip('Forward')
         forward_button.clicked.connect(self.go_forward)
         #Favorites Button
         self.favorite_button = QPushButton()
-        self.fav_border_icon = QIcon(os.path.join("baby_browser", "images", "fav-border.png"))
-        self.fav_full_icon = QIcon(os.path.join("baby_browser", "images", "fav-full.png"))
+        self.fav_border_icon = QIcon(os.path.join(IMG_PATH, "fav-border.png"))
+        self.fav_full_icon = QIcon(os.path.join(IMG_PATH,"fav-full.png"))
         
         self.favorite_button.setIcon(self.fav_border_icon)
         self.favorite_button.setToolTip('Bookmark')
@@ -218,9 +219,9 @@ class Browser_GUI:
         self.app = QApplication(sys.argv)
         self.browser = browser
         # Load the default fonts 
-        font_path_regular =  os.path.join("baby_browser", "fonts", "raleway", "Raleway-Regular.ttf")
-        font_path_bold =  os.path.join("baby_browser", "fonts", "raleway", "Raleway-Bold.ttf")
-        font_path_italic =  os.path.join("baby_browser", "fonts", "raleway", "Raleway-Italic.ttf")
+        font_path_regular =  os.path.join(FONT_PATH, "raleway", "Raleway-Regular.ttf")
+        font_path_bold =  os.path.join(FONT_PATH, "raleway", "Raleway-Bold.ttf")
+        font_path_italic =  os.path.join(FONT_PATH, "raleway", "Raleway-Italic.ttf")
         font_db = QFontDatabase()
         font_db.addApplicationFont(font_path_regular)
         font_db.addApplicationFont(font_path_bold)
