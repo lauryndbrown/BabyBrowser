@@ -12,8 +12,6 @@ CLASS_SELECTOR = "."
 ID_SELECTOR = "#"
 TAG_SELECTOR = None
 class CSSTokenizer:
-    def __init__(self):
-        pass
     def tokenize(self, css_str, dom):
         """Method that finds CSS code in given str and passes it to parse. 
         :param css_str: str containing css 
@@ -78,17 +76,3 @@ class CSSTokenizer:
         if num_unit:
             return CSSUnit(num_unit.group("value"), num_unit.group("unit")) 
         return css_value
-                    
-if __name__=="__main__":
-    from baby_browser.html_tokenizer import *
-   # html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<h1 class=\"hello\">Hi</h1>\n<h2 class=\"hello goodbye\">Yah!</h2>\n</body>\n</html>"
-    html_str = "<html>\n<head><title>Website Title</title></head>\n<body>\n<div id=\"bye\"class=\"hello world\">Hi</div>\n<img src=\"html5.gif\" alt=\"HTML5 Icon\" width=\"128\" height=\"128\">\n</body>\n</html>"
-    #html_str = "".join(list(open(os.path.join("baby_browser", "Examples", "headers2.html"))))
-    html_tokenizer = HtmlTokenizer()
-    html_tokenizer.tokenize(html_str)
-    print(html_tokenizer.dom)
-    #css_str = "body{background-color:red;color:white;}\nh1{background-color:white;}\n.hello{color:yellow;}\n.goodbye{padding:4px;}"
-    css_str = "".join(list(open(os.path.join("baby_browser", "browser.css"))))
-    css_tokenizer = CSSTokenizer()
-    css_tokenizer.tokenize(css_str, html_tokenizer.dom)
-    print(html_tokenizer.dom.str_css())
