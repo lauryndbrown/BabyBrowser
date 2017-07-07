@@ -31,4 +31,12 @@ python3 -m baby_browser.baby_browser
   - Font: Color, Size, Weight
   - BoxStyles: background-color
 # Files
-  
+# TODO
+- [ ] gui.py refactor & doc
+- [ ] browser.py refactor & doc
+- [ ] networking.py refactor & doc
+- [ ] readme additional sections
+- [ ] tests of major methods
+- [ ] javascript: hide, show - No
+- [ ] HTML: bold/strong, i/em, comments, link, button - no
+- [ ] CSS: text-align, border - No

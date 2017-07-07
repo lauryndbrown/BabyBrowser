@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
 from baby_browser.tokenizer.css import *
 from baby_browser.tokenizer.html_tokenizer import *
 from baby_browser.utility.networking import *
