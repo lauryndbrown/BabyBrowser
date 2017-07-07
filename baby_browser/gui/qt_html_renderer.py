@@ -16,9 +16,21 @@ class QT_HTML_Renderer:
         pass
 
     def render_dom(self, root, htmlWidget, layout):
+        """Method that renders the given webpage based on the DOM object
+        :param root: DOM object containing webpage elements 
+        :param htmlWidget: Browser_Widget containing empty webpage 
+        :param layout: QLayout object for the htmlWidget 
+        :returns: None 
+        """
         self.traverse_dom(root, htmlWidget, layout)
 
     def traverse_dom(self, root, htmlWidget, layout):
+        """Method that traverses the given DOM object and calls render methods
+        :param root: DOM object containing webpage elements 
+        :param htmlWidget: Browser_Widget containing empty webpage 
+        :param layout: QLayout object for the htmlWidget 
+        :returns: None 
+        """
         if root.parse_state==IN_BODY:
             self.render_in_body_content(root, layout)
         if isinstance(root, Tag):
@@ -32,12 +44,22 @@ class QT_HTML_Renderer:
             self.traverse_dom(child, htmlWidget, layout)
 
     def set_page_title(self, title, page):
+        """Method that stores the title of the page
+        :param title: str containing webpage Title 
+        :param page: Browser_Widget object representing the webpage 
+        :returns: None 
+        """
         page.setWindowTitle(title)
         page.title = title
 
-    def render_body(self, element, htmlWidget):
+    def render_body(self, root, htmlWidget):
+        """Method that renders the Body Element of the webpage
+        :param root: DOM object containing webpage 
+        :param htmlWidget: Browser_Widget object representing the webpage 
+        :returns: None 
+        """
         widget = htmlWidget.widget
-        self.render_box_styles(element, widget)
+        self.render_box_styles(root, widget)
 
     def render_in_body_content(self, element, layout):
         widget = self.render_tag(element)
@@ -49,7 +71,6 @@ class QT_HTML_Renderer:
         if isinstance(element, Tag):
             tag = element.tag.lower()
             if tag in QT_HTML_Renderer.HEADERS:
-               # widget = self.render_text(element)
                 widget = None
             elif tag==QT_HTML_Renderer.IMG:
                 widget = self.render_img(element)

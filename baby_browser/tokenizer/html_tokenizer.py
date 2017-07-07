@@ -35,7 +35,6 @@ class HtmlTokenizer:
         index = 0
         self.dom = DOM()
         self.current_state = BEFORE_HTML 
-        print(html)
         while index<len(html):
             index = self.__parse(html, index)
     def __parse(self, html, index):
