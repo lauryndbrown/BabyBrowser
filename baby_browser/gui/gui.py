@@ -23,8 +23,11 @@ class Browser_Widget(QWidget):
         self.title = None
 
     def initUI(self):
-
+        """Method that builds WebPage Tab UI. 
+        :returns: None. 
+        """
         self.widget = QWidget()
+
         #Scoll Area Properites
         scrollArea = QScrollArea()
         scrollArea.setWidgetResizable(True)
@@ -41,6 +44,9 @@ class Browser_Widget(QWidget):
         scroll_layout.setAlignment(Qt.AlignTop)
 
     def go_back(self):
+        """Method that manages data for back button.
+        :returns: str representing previous URL visited. 
+        """
         if not self.previous_pages:
             return None
         page_url = self.previous_pages.pop()
@@ -48,21 +54,26 @@ class Browser_Widget(QWidget):
         return page_url
 
     def go_forward(self):
+        """Method that manages data for forward button.
+        :returns: str representing forward URL. 
+        """
         if not self.forward_pages:
             return None
         page_url = self.forward_pages.pop()
         self.previous_pages.append(self.current_url)
         return page_url
-    def __str__(self):
-        return "Curr:{}\nPrev:{}\nFor:{}".format(self.current_url, self.previous_pages, self.forward_pages)
-class Browser_Main_Widget(QMainWindow):
 
+class Browser_Main_Widget(QMainWindow):
+    NEW_TAB_TITLE = "New Tab"
     def __init__(self, browser=None):
         super().__init__()
         self.browser = browser
         self.initUI()
     
     def initUI(self):
+        """Method that builds browser user interface. 
+        :returns: None. 
+        """
         icon_path =  os.path.join(IMG_PATH, "crib_background.png")
         self.setWindowIcon(QIcon(icon_path))
         self.page_icon = QIcon(os.path.join(IMG_PATH,  "page.png"))
@@ -142,18 +153,30 @@ class Browser_Main_Widget(QMainWindow):
         self.addDefaultTab()
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle('BabyBrowser')
-    
-    def removeTab(self, index, no_add=False):
-        if self.tabBar.count()==1 and not no_add:
+       
+    def removeTab(self, index):
+        """Method removes tab at index. Adds Default Tab if last tab is removed. 
+        :param index: int representing tab to be removed 
+        :returns: None. 
+        """
+        if self.tabBar.count()==1:
             self.addDefaultTab()
         widget = self.tabBar.widget(index)
         widget.deleteLater()
         self.tabBar.removeTab(index)
     
     def addDefaultTab(self):
-        self.addTab("New Tab", Browser_Widget())
+        """Method adds empty tab. 
+        :returns: None. 
+        """
+        self.addTab(self.NEW_TAB_TITLE, Browser_Widget())
     
     def addTab(self, tabName, widget):
+        """Method adds tab to browser. 
+        :param tabName: str representing title of webpage 
+        :param widget: QWidget representing the webpage 
+        :returns: None. 
+        """
         self.tabBar.addTab(widget, tabName)
         self.tabBar.setCurrentWidget(widget)
         index = self.tabBar.currentIndex()
