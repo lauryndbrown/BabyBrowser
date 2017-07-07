@@ -175,6 +175,7 @@ class Browser_Main_Widget(QMainWindow):
             self.favorite_button.setIcon(self.fav_border_icon)
 
         self.statusBar.showMessage("Fetching Url")
+
         tabWidget = self.getCurrentTab()
         if backwards:
             dom = self.browser.fetch_url(url, True)
@@ -187,11 +188,17 @@ class Browser_Main_Widget(QMainWindow):
         self.statusBar.showMessage("Rendering Webpage")
         self.clear_tab(tabWidget.widget)
         Browser_GUI.render_dom(dom, tabWidget)
+        self.setCurrentTitle(tabWidget.title)
         self.statusBar.showMessage("")
     
+    def setCurrentTitle(self, title):
+        tab_index = self.tabBar.currentIndex()
+        self.tabBar.setTabText(tab_index, title)
+        
     def clear_tab(self, tab):
         layout = tab.layout()
-        for i in range(layout.count()): layout.itemAt(i).widget().close()
+        for i in range(layout.count()): 
+            layout.itemAt(i).widget().close()
 
     def go_back(self):
         widget = self.getCurrentTab()
@@ -239,8 +246,10 @@ class Browser_Main_Widget(QMainWindow):
         url = self.browser.current_url
         tab_index = self.tabBar.currentIndex()
         title = self.tabBar.tabText(tab_index)
+
         self.browser.remove_bookmark(url)
         self.favorite_button.setIcon(self.fav_border_icon)
+
         for action in self.favMenu.actions():
             if action.text()==url or action.text()==title:
                 self.favMenu.removeAction(action)
