@@ -11,8 +11,8 @@ CRED_FILE = join( expanduser('~'), '.badboy_credentials' )
 
 class BabyBrowser:
 
-  #  BOOKMARK_FILE = os.path.join(os.path.dirname(__file__),"utility", "bookmarks.txt")
     BOOKMARK_FILE = os.path.join(expanduser('~'),"BabyBrowser", "bookmarks.txt")
+    DEFAULT_BOOKMARK_FILE = os.path.join(os.path.dirname(__file__), "utility", "default_bookmarks.txt")
     DEFAULT_CSS = os.path.join(os.path.dirname(__file__), "assets", "css", "browser.css")
 
     def __init__(self):

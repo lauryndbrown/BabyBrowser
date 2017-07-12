@@ -2,4 +2,4 @@ include baby_browser/assets/css/*
 include baby_browser/assets/fonts/*
 include baby_browser/assets/fonts/raleway/*
 include baby_browser/assets/images/*
-
+include baby_browser/utility/*.txt
