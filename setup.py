@@ -6,7 +6,7 @@ setup(name='babybrowser',
       url='https://github.com/lauryndbrown/BabyBrowser',
       author='Lauryn Brown',
       author_email='lauryndbrown@gmail.com',
-      license='MIT',
+      license='GNU GPLv3',
       packages=find_packages(),
       install_requires=[
         'PyQt5',
