@@ -17,4 +17,5 @@ setup(name='babybrowser',
             'babybrowser = baby_browser.baby_browser:start'
         ]
       }, 
+      include_package_data=True,
       zip_safe=False)

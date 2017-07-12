@@ -1,17 +1,19 @@
 import pickle
 import os
+from os.path import expanduser, join
 
 from baby_browser.menu_objects import MenuWebPage 
 from baby_browser.gui.gui import * 
 from baby_browser.tokenizer.html_tokenizer import * 
 from baby_browser.tokenizer.css_tokenizer import * 
 from baby_browser.utility.networking import * 
-
+CRED_FILE = join( expanduser('~'), '.badboy_credentials' )   
 
 class BabyBrowser:
 
-    BOOKMARK_FILE = os.path.join("baby_browser","utility", "bookmarks.txt")
-    DEFAULT_CSS = os.path.join("baby_browser", "assets", "css", "browser.css")
+  #  BOOKMARK_FILE = os.path.join(os.path.dirname(__file__),"utility", "bookmarks.txt")
+    BOOKMARK_FILE = os.path.join(expanduser('~'),"BabyBrowser", "bookmarks.txt")
+    DEFAULT_CSS = os.path.join(os.path.dirname(__file__), "assets", "css", "browser.css")
 
     def __init__(self):
         self.html_tokenizer = HtmlTokenizer()
@@ -19,10 +21,10 @@ class BabyBrowser:
         self.gui = None
         self.networking = Network()
         self.bookmarks_has_changed = False
-        if os.stat(BabyBrowser.BOOKMARK_FILE).st_size!=0:
+        try:
             with open(BabyBrowser.BOOKMARK_FILE, 'rb') as bookmarks_file:
                 self.bookmarks = pickle.load(bookmarks_file)
-        else:
+        except:
             self.bookmarks = []
         with open(BabyBrowser.DEFAULT_CSS, 'r') as default_css:
             self.default_css = "".join(list(default_css))
