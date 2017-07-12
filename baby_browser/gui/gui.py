@@ -83,7 +83,6 @@ class Browser_Main_Widget(QMainWindow):
             self.tabBar.currentChanged.connect(self.onTabChange)
             close_icon_path = os.path.join(IMG_PATH,"close.png")
             close_icon_path = reverse_slashes(close_icon_path)
-            print(close_icon_path)
             self.setStyleSheet("QTabBar::close-button { image: url("+close_icon_path+"); }")
             self.tabBar.setTabsClosable(True)
             self.tabBar.setMovable(True)

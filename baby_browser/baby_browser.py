@@ -7,12 +7,12 @@ from baby_browser.gui.gui import *
 from baby_browser.tokenizer.html_tokenizer import * 
 from baby_browser.tokenizer.css_tokenizer import * 
 from baby_browser.utility.networking import * 
-CRED_FILE = join( expanduser('~'), '.badboy_credentials' )   
 
 class BabyBrowser:
 
-    BOOKMARK_FILE = os.path.join(expanduser('~'),"BabyBrowser", "bookmarks.txt")
-    DEFAULT_BOOKMARK_FILE = os.path.join(os.path.dirname(__file__), "utility", "default_bookmarks.txt")
+    BROWSER_FOLDER = os.path.join(expanduser('~'),"BabyBrowser") 
+    BOOKMARKS_FILE =  os.path.join(BROWSER_FOLDER, "bookmarks.txt")
+    DEFAULT_BOOKMARKS_FILE = os.path.join(os.path.dirname(__file__), "utility", "default_bookmarks.txt")
     DEFAULT_CSS = os.path.join(os.path.dirname(__file__), "assets", "css", "browser.css")
 
     def __init__(self):
@@ -22,10 +22,13 @@ class BabyBrowser:
         self.networking = Network()
         self.bookmarks_has_changed = False
         try:
-            with open(BabyBrowser.BOOKMARK_FILE, 'rb') as bookmarks_file:
+            with open(BabyBrowser.BOOKMARKS_FILE, 'rb') as bookmarks_file:
                 self.bookmarks = pickle.load(bookmarks_file)
         except:
-            self.bookmarks = []
+            with open(BabyBrowser.DEFAULT_BOOKMARKS_FILE, 'rb') as bookmarks_file:
+                self.bookmarks = pickle.load(bookmarks_file)
+            if not os.path.isdir(BabyBrowser.BROWSER_FOLDER):
+                os.makedirs(BabyBrowser.BROWSER_FOLDER) 
         with open(BabyBrowser.DEFAULT_CSS, 'r') as default_css:
             self.default_css = "".join(list(default_css))
 
@@ -118,7 +121,7 @@ class BabyBrowser:
         :returns: None.
         """
         if self.bookmarks_has_changed:
-            with open(BabyBrowser.BOOKMARK_FILE, 'wb') as bookmarks_file:
+            with open(BabyBrowser.BOOKMARKS_FILE, 'wb') as bookmarks_file:
                 pickle.dump(self.bookmarks, bookmarks_file, protocol=pickle.HIGHEST_PROTOCOL)
         
 def start():
