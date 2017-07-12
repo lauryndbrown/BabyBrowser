@@ -1,6 +1,6 @@
 import unittest
-from baby_browser.html_tokenizer import *
-from baby_browser.css_tokenizer import *
+from .html_tokenizer import *
+from .css_tokenizer import *
 
 class TestCSSTokenizer(unittest.TestCase):
     def setUp(self):

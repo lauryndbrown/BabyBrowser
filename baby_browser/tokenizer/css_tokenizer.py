@@ -1,6 +1,6 @@
 import os
 import re
-from baby_browser.tokenizer.css import *
+from .css import *
 #Tokens
 t_CSS = re.compile("\s*(?P<selectors>[#\.\w\-\s,_]+)\s*\{\s*(?P<declarations>[^}]+)\}") #Groups the identifier and the css rules
 t_DECLARATIONS = re.compile("(?P<property>[\w-]+):\s*(?P<value>[\w-]+);")

@@ -1,6 +1,7 @@
 import pickle
 import os
 
+from baby_browser.menu_objects import MenuWebPage 
 from baby_browser.gui.gui import * 
 from baby_browser.tokenizer.html_tokenizer import * 
 from baby_browser.tokenizer.css_tokenizer import * 
@@ -117,21 +118,9 @@ class BabyBrowser:
         if self.bookmarks_has_changed:
             with open(BabyBrowser.BOOKMARK_FILE, 'wb') as bookmarks_file:
                 pickle.dump(self.bookmarks, bookmarks_file, protocol=pickle.HIGHEST_PROTOCOL)
-
-class MenuWebPage:
-
-    def __init__(self, url, title=None, icon=None):
-        self.url = url
-        self.icon = icon
-        self.title = title
-
-    def __str__(self):
-        return "Title:{} Url:{}".format(self.title, self.url)
-
-    def __repr__(self):
-        return str(self)
-
-
-if __name__=="__main__":
+        
+def start():
     browser = BabyBrowser()
     browser.show_gui()
+if __name__=="__main__":
+    start()

@@ -1,5 +1,5 @@
 import unittest
-from baby_browser.html_tokenizer import *
+from .html_tokenizer import *
 
 class TestHtmlTokenizer(unittest.TestCase):
     def test_init(self):

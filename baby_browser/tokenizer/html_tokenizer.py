@@ -1,5 +1,5 @@
 import re
-from baby_browser.tokenizer.html_objects import * 
+from .html_objects import * 
 import logging, sys
 #Tokens
 t_OPENTAG = re.compile("\s*<(?P<tag>\w+)\s*(?P<attrs>[^>]+)?>")

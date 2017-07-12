@@ -1,5 +1,5 @@
 import unittest
-from baby_browser.css import *
+from .css import *
 
 class TestRenderObject(unittest.TestCase):
     def test_init(self):

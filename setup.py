@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='babybrowser',
       version='0.1',
@@ -7,5 +7,14 @@ setup(name='babybrowser',
       author='Lauryn Brown',
       author_email='lauryndbrown@gmail.com',
       license='MIT',
-      packages=['baby_browser'],
+      packages=find_packages(),
+      install_requires=[
+        'PyQt5',
+        'requests'
+      ],
+      entry_points={
+        'console_scripts':[
+            'babybrowser = baby_browser.baby_browser:start'
+        ]
+      }, 
       zip_safe=False)
