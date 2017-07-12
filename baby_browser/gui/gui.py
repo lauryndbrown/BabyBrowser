@@ -1,6 +1,7 @@
 import sys
 import functools
 import os
+import posixpath
 
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
@@ -9,9 +10,8 @@ from PyQt5.QtGui import *
 from baby_browser.tokenizer.html_tokenizer import *
 from baby_browser.gui.qt_html_renderer import *
 
-IMG_PATH = os.path.join("baby_browser", "assets", "images")
-FONT_PATH = os.path.join("baby_browser", "assets", "fonts")
-
+IMG_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "images")
+FONT_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "fonts")
 class Browser_Widget(QWidget):
 
     def __init__(self):
@@ -81,12 +81,16 @@ class Browser_Main_Widget(QMainWindow):
             self.tabBar = QTabWidget()
             self.tabBar.tabCloseRequested.connect(self.removeTab)
             self.tabBar.currentChanged.connect(self.onTabChange)
-            close_icon_path = "baby_browser/assets/images/close.png"
+            close_icon_path = os.path.join(IMG_PATH,"close.png")
+            close_icon_path = reverse_slashes(close_icon_path)
+            print(close_icon_path)
             self.setStyleSheet("QTabBar::close-button { image: url("+close_icon_path+"); }")
             self.tabBar.setTabsClosable(True)
             self.tabBar.setMovable(True)
             self.setCentralWidget(self.tabBar)
-        
+        def reverse_slashes(input_str):
+            return "/".join(input_str.split("\\"))
+
         def createNewTabButton():
             """Method that creates New Tab Button on the TabBar 
             :returns: None. 

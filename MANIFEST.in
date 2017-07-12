@@ -1,1 +1,5 @@
-include baby_browser/assets/*
+include baby_browser/assets/css/*
+include baby_browser/assets/fonts/*
+include baby_browser/assets/fonts/raleway/*
+include baby_browser/assets/images/*
+
