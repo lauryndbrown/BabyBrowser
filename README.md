@@ -1,4 +1,10 @@
-# BabyBrowser
+<h1 align="center">
+  <br>
+  <img src="https://github.com/lauryndbrown/BabyBrowser/blob/master/baby_browser/images/crib_background.png" alt="BabyBrowser" width="200">
+  <br>
+  BabyBrowser
+  <br>
+</h1>
 
 BabyBrowser is a small, opinionated browser I built during my time at the Recurse Center in New York. You can see the HTML Pages that the Browser can interprete in the [Examples folder](https://github.com/lauryndbrown/BabyBrowser/tree/master/baby_browser/Examples) of the project.
 # Installation & Running
