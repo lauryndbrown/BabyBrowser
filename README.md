@@ -10,11 +10,10 @@
 ![Demo Gif](https://github.com/lauryndbrown/BabyBrowser/blob/master/baby_browser/Screenshots/demo3.gif)
 
 Check the [Examples folder](https://github.com/lauryndbrown/BabyBrowser/tree/master/baby_browser/Examples) for HTML pages the web browser can interpret.
-# Installation & Running
+# Install & Run
 ```shell
-git clone git@github.com:lauryndbrown/BabyBrowser.git
-cd BabyBrowser
-python3 -m baby_browser.baby_browser
+> pip install babybrowser
+> babybrowser
 ```
 # Features
 ## System Overview
@@ -29,8 +28,6 @@ python3 -m baby_browser.baby_browser
   - Base Browser CSS
   - Style Sheet Cascading
   - CSS calculated as-needed by the interpreter
-  - On-Demand CSS Interpreter to add styles to the DOM
-  - CSS style inheritance
   - Translation of the DOM to PyQT elements
 ## Implemented HTML 
   - Head Tags: Title, Style
@@ -39,5 +36,3 @@ python3 -m baby_browser.baby_browser
 ## Implemented CSS
   - Font: Color, Size, Weight
   - BoxStyles: background-color
-# Files
-  
