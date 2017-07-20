@@ -1,13 +1,13 @@
 <h1 align="center">
   <br>
-  <img src="https://github.com/lauryndbrown/BabyBrowser/blob/master/baby_browser/images/crib_background.png" alt="BabyBrowser" width="200">
+  <img src="https://github.com/lauryndbrown/BabyBrowser/blob/master/baby_browser/assets/images/crib.png" alt="BabyBrowser" width="200">
   <br>
   BabyBrowser
   <br>
 </h1>
 <p align="center"><strong>A Small Web Browser Built in Python</strong></p>
 
-Check the [Examples folder](https://github.com/lauryndbrown/BabyBrowser/tree/master/baby_browser/Examples) for HTML the web browser can interpret.
+Check the [Examples folder](https://github.com/lauryndbrown/BabyBrowser/tree/master/baby_browser/Examples) for HTML pages the web browser can interpret.
 # Installation & Running
 ```shell
 git clone git@github.com:lauryndbrown/BabyBrowser.git
@@ -38,12 +38,4 @@ python3 -m baby_browser.baby_browser
   - Font: Color, Size, Weight
   - BoxStyles: background-color
 # Files
-# TODO
-- [ ] gui.py refactor & doc
-- [ ] browser.py refactor & doc
-- [ ] networking.py refactor & doc
-- [ ] readme additional sections
-- [ ] tests of major methods
-- [ ] javascript: hide, show - No
-- [ ] HTML: bold/strong, i/em, comments, link, button - no
-- [ ] CSS: text-align, border - No
+  
