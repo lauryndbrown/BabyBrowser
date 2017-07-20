@@ -34,4 +34,8 @@ Check the [Examples folder](https://github.com/lauryndbrown/BabyBrowser/tree/mas
 - **Self Closing Tags:** HR, IMG, BR
 ## Implemented CSS
   - **Font:** Color, Size, Weight
-  - **BoxStyles:** background-color
+  - **Box Styles:** Background-color
+# Credits
+- [PyQt5](http://pyqt.sourceforge.net/Docs/PyQt5/)
+- [Requests](http://docs.python-requests.org/en/master/)
+- [Material Icons](https://material.io/icons/)
