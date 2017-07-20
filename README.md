@@ -1,11 +1,13 @@
 <h1 align="center">
   <br>
-  <img src="https://github.com/lauryndbrown/BabyBrowser/blob/master/baby_browser/assets/images/crib.png" alt="BabyBrowser" width="200">
+  <img src="https://github.com/lauryndbrown/BabyBrowser/blob/master/baby_browser/assets/images/crib.png" alt="BabyBrowser" width="100">
   <br>
   BabyBrowser
   <br>
 </h1>
 <p align="center"><strong>A Small Web Browser Built in Python</strong></p>
+
+![Demo Gif](https://github.com/lauryndbrown/BabyBrowser/blob/master/baby_browser/Screenshots/demo3.gif)
 
 Check the [Examples folder](https://github.com/lauryndbrown/BabyBrowser/tree/master/baby_browser/Examples) for HTML pages the web browser can interpret.
 # Installation & Running
