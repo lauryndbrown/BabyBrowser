@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='babybrowser',
-      version='0.1',
+      version='0.1.1',
       description='A small browser implementation in Python',
       url='https://github.com/lauryndbrown/BabyBrowser',
       author='Lauryn Brown',
