@@ -16,23 +16,22 @@ Check the [Examples folder](https://github.com/lauryndbrown/BabyBrowser/tree/mas
 > babybrowser
 ```
 # Features
-## System Overview
-- Networking
-  - Get Retrival of websites and images
-- Browser User Interface built in PyQT
-  - Back and Forward Buttons
-  - Webpage Bookmarking Feature
-  - Multiple Movable/Closable Browser Tabs with Webpage Title Display
-- Webpage Rendering
-  - Html Interpreter to build a DOM
-  - Base Browser CSS
-  - Style Sheet Cascading
-  - CSS calculated as-needed by the interpreter
-  - Translation of the DOM to PyQT elements
+## Overview
+### Networking
+- Get Retrival of websites and images
+### PyQt User Interface 
+- Bookmarks
+- Back and Forward Buttons
+- Tabs with Webpage Title Display
+### Webpage Rendering
+- Interprete HTML to DOM representation
+- Style Sheet Cascading calculated as-needed
+- Default Browser Styles
+- Translation of the DOM to PyQt elements for display
 ## Implemented HTML 
-  - Head Tags: Title, Style
-  - Self Closing Tags: HR, IMG, BR
-  - Additional In-Body Tags: P, H1-H6
+- **Head Tags:** TITLE, STYLE
+- **In-Body Tags:** P, H1-H6
+- **Self Closing Tags:** HR, IMG, BR
 ## Implemented CSS
-  - Font: Color, Size, Weight
-  - BoxStyles: background-color
+  - **Font:** Color, Size, Weight
+  - **BoxStyles:** background-color
